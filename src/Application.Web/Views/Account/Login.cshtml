@@ -1,0 +1,17 @@
+﻿@model LoginViewModel;
+@{
+
+    ViewData["Title"] = "The Book Haven - Login";
+}
+<form asp-action="Login">
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" class="form-control" />
+    </div>
+    <button type="submit">Login</button>
+</form>
+

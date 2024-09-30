@@ -1,0 +1,16 @@
+﻿@model RegisterViewModel;
+@{
+    ViewData["Title"] = "The Book Haven - Registration";
+}
+
+<form asp-action="Register">
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" class="form-control" />
+    </div>
+    <button type="submit">Register</button>
+</form>
