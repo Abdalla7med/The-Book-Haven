@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Back end\\DEPI\\Final Project\\Application.DAL\\Application.Shared\\Application.Shared.csproj": {}
+    "D:\\Back end\\DEPI\\Final Project\\src\\Application.Shared\\Application.Shared.csproj": {}
   },
   "projects": {
-    "D:\\Back end\\DEPI\\Final Project\\Application.DAL\\Application.Shared\\Application.Shared.csproj": {
+    "D:\\Back end\\DEPI\\Final Project\\src\\Application.Shared\\Application.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Back end\\DEPI\\Final Project\\Application.DAL\\Application.Shared\\Application.Shared.csproj",
+        "projectUniqueName": "D:\\Back end\\DEPI\\Final Project\\src\\Application.Shared\\Application.Shared.csproj",
         "projectName": "Application.Shared",
-        "projectPath": "D:\\Back end\\DEPI\\Final Project\\Application.DAL\\Application.Shared\\Application.Shared.csproj",
+        "projectPath": "D:\\Back end\\DEPI\\Final Project\\src\\Application.Shared\\Application.Shared.csproj",
         "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-        "outputPath": "D:\\Back end\\DEPI\\Final Project\\Application.DAL\\Application.Shared\\obj\\",
+        "outputPath": "D:\\Back end\\DEPI\\Final Project\\src\\Application.Shared\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\DevExpress 24.1\\Components\\Offline Packages"

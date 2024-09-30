@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Back end\\DEPI\\Final Project\\Application.DAL\\Application.DAL\\Application.DAL.csproj": {}
+    "D:\\Back end\\DEPI\\Final Project\\src\\Application.DAL\\Application.DAL.csproj": {}
   },
   "projects": {
-    "D:\\Back end\\DEPI\\Final Project\\Application.DAL\\Application.DAL\\Application.DAL.csproj": {
+    "D:\\Back end\\DEPI\\Final Project\\src\\Application.DAL\\Application.DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Back end\\DEPI\\Final Project\\Application.DAL\\Application.DAL\\Application.DAL.csproj",
+        "projectUniqueName": "D:\\Back end\\DEPI\\Final Project\\src\\Application.DAL\\Application.DAL.csproj",
         "projectName": "Application.DAL",
-        "projectPath": "D:\\Back end\\DEPI\\Final Project\\Application.DAL\\Application.DAL\\Application.DAL.csproj",
+        "projectPath": "D:\\Back end\\DEPI\\Final Project\\src\\Application.DAL\\Application.DAL.csproj",
         "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-        "outputPath": "D:\\Back end\\DEPI\\Final Project\\Application.DAL\\Application.DAL\\obj\\",
+        "outputPath": "D:\\Back end\\DEPI\\Final Project\\src\\Application.DAL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\DevExpress 24.1\\Components\\Offline Packages"
@@ -50,6 +50,24 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "microsoft.entityframeworkcore.design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "microsoft.entityframeworkcore.sqlserver": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "microsoft.entityframeworkcore.tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.8, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

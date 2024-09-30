@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ZDzqfjtNZiM=",
+  "dgSpecHash": "F/R8BN1kvWU=",
   "success": true,
-  "projectFilePath": "D:\\Back end\\DEPI\\Final Project\\Application.DAL\\Application.BLL\\Application.BLL.csproj",
+  "projectFilePath": "D:\\Back end\\DEPI\\Final Project\\src\\Application.BLL\\Application.BLL.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

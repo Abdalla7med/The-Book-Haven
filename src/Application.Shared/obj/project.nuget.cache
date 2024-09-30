@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "XL/tRrA+wew=",
+  "dgSpecHash": "z4VRkXlbOZw=",
   "success": true,
-  "projectFilePath": "D:\\Back end\\DEPI\\Final Project\\Application.DAL\\Application.Shared\\Application.Shared.csproj",
+  "projectFilePath": "D:\\Back end\\DEPI\\Final Project\\src\\Application.Shared\\Application.Shared.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

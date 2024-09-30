@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Back end\\DEPI\\Final Project\\Application.DAL\\Application.Web\\Application.Web.csproj": {}
+    "D:\\Back end\\DEPI\\Final Project\\src\\Application.Web\\Application.Web.csproj": {}
   },
   "projects": {
-    "D:\\Back end\\DEPI\\Final Project\\Application.DAL\\Application.Web\\Application.Web.csproj": {
+    "D:\\Back end\\DEPI\\Final Project\\src\\Application.Web\\Application.Web.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Back end\\DEPI\\Final Project\\Application.DAL\\Application.Web\\Application.Web.csproj",
+        "projectUniqueName": "D:\\Back end\\DEPI\\Final Project\\src\\Application.Web\\Application.Web.csproj",
         "projectName": "Application.Web",
-        "projectPath": "D:\\Back end\\DEPI\\Final Project\\Application.DAL\\Application.Web\\Application.Web.csproj",
+        "projectPath": "D:\\Back end\\DEPI\\Final Project\\src\\Application.Web\\Application.Web.csproj",
         "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-        "outputPath": "D:\\Back end\\DEPI\\Final Project\\Application.DAL\\Application.Web\\obj\\",
+        "outputPath": "D:\\Back end\\DEPI\\Final Project\\src\\Application.Web\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\DevExpress 24.1\\Components\\Offline Packages"
@@ -50,6 +50,12 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "microsoft.entityframeworkcore.sqlserver": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

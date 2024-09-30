@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Back end\\DEPI\\Final Project\\Application.DAL\\Application.BLL\\Application.BLL.csproj",
+      "projectUniqueName": "D:\\Back end\\DEPI\\Final Project\\src\\Application.BLL\\Application.BLL.csproj",
       "projectName": "Application.BLL",
-      "projectPath": "D:\\Back end\\DEPI\\Final Project\\Application.DAL\\Application.BLL\\Application.BLL.csproj",
+      "projectPath": "D:\\Back end\\DEPI\\Final Project\\src\\Application.BLL\\Application.BLL.csproj",
       "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-      "outputPath": "D:\\Back end\\DEPI\\Final Project\\Application.DAL\\Application.BLL\\obj\\",
+      "outputPath": "D:\\Back end\\DEPI\\Final Project\\src\\Application.BLL\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\DevExpress 24.1\\Components\\Offline Packages"
