@@ -1,0 +1,15 @@
+D:\Back end\DEPI\Final Project\src\Application.DAL\bin\Debug\net8.0\Application.DAL.deps.json
+D:\Back end\DEPI\Final Project\src\Application.DAL\bin\Debug\net8.0\Application.DAL.runtimeconfig.json
+D:\Back end\DEPI\Final Project\src\Application.DAL\bin\Debug\net8.0\Application.DAL.dll
+D:\Back end\DEPI\Final Project\src\Application.DAL\bin\Debug\net8.0\Application.DAL.pdb
+D:\Back end\DEPI\Final Project\src\Application.DAL\obj\Debug\net8.0\Application.DAL.csproj.AssemblyReference.cache
+D:\Back end\DEPI\Final Project\src\Application.DAL\obj\Debug\net8.0\Application.DAL.GeneratedMSBuildEditorConfig.editorconfig
+D:\Back end\DEPI\Final Project\src\Application.DAL\obj\Debug\net8.0\Application.DAL.AssemblyInfoInputs.cache
+D:\Back end\DEPI\Final Project\src\Application.DAL\obj\Debug\net8.0\Application.DAL.AssemblyInfo.cs
+D:\Back end\DEPI\Final Project\src\Application.DAL\obj\Debug\net8.0\Application.DAL.csproj.CoreCompileInputs.cache
+D:\Back end\DEPI\Final Project\src\Application.DAL\obj\Debug\net8.0\Application.DAL.sourcelink.json
+D:\Back end\DEPI\Final Project\src\Application.DAL\obj\Debug\net8.0\Application.DAL.dll
+D:\Back end\DEPI\Final Project\src\Application.DAL\obj\Debug\net8.0\refint\Application.DAL.dll
+D:\Back end\DEPI\Final Project\src\Application.DAL\obj\Debug\net8.0\Application.DAL.pdb
+D:\Back end\DEPI\Final Project\src\Application.DAL\obj\Debug\net8.0\Application.DAL.genruntimeconfig.cache
+D:\Back end\DEPI\Final Project\src\Application.DAL\obj\Debug\net8.0\ref\Application.DAL.dll

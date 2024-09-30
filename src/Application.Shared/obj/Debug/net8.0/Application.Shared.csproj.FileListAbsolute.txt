@@ -1,0 +1,12 @@
+D:\Back end\DEPI\Final Project\src\Application.Shared\bin\Debug\net8.0\Application.Shared.deps.json
+D:\Back end\DEPI\Final Project\src\Application.Shared\bin\Debug\net8.0\Application.Shared.dll
+D:\Back end\DEPI\Final Project\src\Application.Shared\bin\Debug\net8.0\Application.Shared.pdb
+D:\Back end\DEPI\Final Project\src\Application.Shared\obj\Debug\net8.0\Application.Shared.GeneratedMSBuildEditorConfig.editorconfig
+D:\Back end\DEPI\Final Project\src\Application.Shared\obj\Debug\net8.0\Application.Shared.AssemblyInfoInputs.cache
+D:\Back end\DEPI\Final Project\src\Application.Shared\obj\Debug\net8.0\Application.Shared.AssemblyInfo.cs
+D:\Back end\DEPI\Final Project\src\Application.Shared\obj\Debug\net8.0\Application.Shared.csproj.CoreCompileInputs.cache
+D:\Back end\DEPI\Final Project\src\Application.Shared\obj\Debug\net8.0\Application.Shared.sourcelink.json
+D:\Back end\DEPI\Final Project\src\Application.Shared\obj\Debug\net8.0\Application.Shared.dll
+D:\Back end\DEPI\Final Project\src\Application.Shared\obj\Debug\net8.0\refint\Application.Shared.dll
+D:\Back end\DEPI\Final Project\src\Application.Shared\obj\Debug\net8.0\Application.Shared.pdb
+D:\Back end\DEPI\Final Project\src\Application.Shared\obj\Debug\net8.0\ref\Application.Shared.dll
