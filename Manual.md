@@ -21,7 +21,7 @@ Welcome to **The Book Haven**! This user manual provides detailed instructions o
 
 To use **The Book Haven**, follow these steps:
 
-1. **Access the Application**: Open your web browser and navigate to `http://localhost:5000` (or your deployed URL).
+1. **Access the Application**: Open your web browser and navigate to `http://localhost:7252` (or your deployed URL).
 2. **Login**: Enter your credentials to log in. (If you are a new user, please register first.)
 
 ## User Roles

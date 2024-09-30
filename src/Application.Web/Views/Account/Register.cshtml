@@ -3,14 +3,20 @@
     ViewData["Title"] = "The Book Haven - Registration";
 }
 
-<form asp-action="Register">
+<form asp-action="Register" class="p-4 border rounded bg-light shadow">
+    <h2 class="text-center mb-4">Create Account</h2>
     <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
+        <label asp-for="Email" class="form-label">Email</label>
+        <input asp-for="Email" class="form-control" placeholder="Enter your email" required />
     </div>
     <div class="form-group">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" class="form-control" />
+        <label asp-for="Password" class="form-label">Password</label>
+        <input asp-for="Password" class="form-control" placeholder="Enter your password" required />
     </div>
-    <button type="submit">Register</button>
+    <div class="text-center mt-3">
+        <button type="submit" class="btn btn-primary btn-lg">Register</button>
+    </div>
+    <div class="text-center mt-3">
+        <p>Already have an account? <a href="/Account/Login">Login here</a>.</p>
+    </div>
 </form>
