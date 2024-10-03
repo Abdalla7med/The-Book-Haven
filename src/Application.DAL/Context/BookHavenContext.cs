@@ -27,7 +27,7 @@ namespace Application.DAL.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
    
-            //Book - Author	WrittenBy	A book can be written by one or more authors.
+            //Book - Author	WrittenBy ( many-to-many )	A book can be written by one or more authors.
             modelBuilder.Entity<Book>()
             .HasMany(b => b.Authors) // Assuming Authors is a navigation property
             .WithMany(a => a.Books)

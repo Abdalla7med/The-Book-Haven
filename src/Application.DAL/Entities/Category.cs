@@ -10,6 +10,7 @@ namespace Application.DAL
     public class Category
     {
         public int CategoryId { get; set; }
+
         [StringLength(25)]
         public string Name { get; set; }
         public ICollection<Book> Books { get; set; }
