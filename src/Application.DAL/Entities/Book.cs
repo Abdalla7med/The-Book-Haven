@@ -14,7 +14,7 @@ namespace Application.DAL
         public string ISBN { get; set; }
         public int PublicationYear { get; set; }
         public int AvailableCopies { get; set; }
-
+        public bool IsDeleted { set; get; }
         //  Relationships
         public int? CategoryId { get; set; }
         public Category Category { get; set; }

@@ -19,6 +19,7 @@ namespace Application.DAL
         [Phone, DataType(DataType.PhoneNumber)]
         public string Phone { get; set; }
         public string Address { get; set; }
+        public bool IsBlocked { set; get; }
 
         /// Relations
         public ICollection<Loan> Loans { get; set; }

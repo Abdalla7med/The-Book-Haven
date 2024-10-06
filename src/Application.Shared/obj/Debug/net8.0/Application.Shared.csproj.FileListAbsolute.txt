@@ -10,3 +10,7 @@ D:\Back end\DEPI\Final Project\src\Application.Shared\obj\Debug\net8.0\Applicati
 D:\Back end\DEPI\Final Project\src\Application.Shared\obj\Debug\net8.0\refint\Application.Shared.dll
 D:\Back end\DEPI\Final Project\src\Application.Shared\obj\Debug\net8.0\Application.Shared.pdb
 D:\Back end\DEPI\Final Project\src\Application.Shared\obj\Debug\net8.0\ref\Application.Shared.dll
+D:\Back end\DEPI\Final Project\src\Application.Shared\bin\Debug\net8.0\Application.DAL.dll
+D:\Back end\DEPI\Final Project\src\Application.Shared\bin\Debug\net8.0\Application.DAL.pdb
+D:\Back end\DEPI\Final Project\src\Application.Shared\obj\Debug\net8.0\Application.Shared.csproj.AssemblyReference.cache
+D:\Back end\DEPI\Final Project\src\Application.Shared\obj\Debug\net8.0\Applicat.30E67AEF.Up2Date

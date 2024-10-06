@@ -31,6 +31,11 @@ namespace Application.DAL.UnitOfWork
             PenaltyRepository = new PenaltyRepository(context);     
         }
 
+        public IRepository<TEntity> Repository<TEntity>() where TEntity : class, new()
+        {
+            return new GenericRepository<TEntity>(_context);
+        }
+
         public async Task<int> CompleteAsync()
         {
             return await _context.SaveChangesAsync();

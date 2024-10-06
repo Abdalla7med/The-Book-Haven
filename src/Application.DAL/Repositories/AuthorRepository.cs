@@ -10,6 +10,7 @@ namespace Application.DAL.Repositories
     public class AuthorRepository: GenericRepository<Author>, IAuthorRepository
     {
         public AuthorRepository(BookHavenContext _context) :base(_context) { }  
+
     }
 
 }

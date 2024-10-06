@@ -1,8 +1,13 @@
+using Application.DAL.UnitOfWork;
 using Application.DAL;
+using Application.BLL;
+using Application.Shared;
 using Application.DAL.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.Extensions.DependencyInjection;
+using Application.Shared.Mapping;
+using AutoMapper;
 namespace Application.Web
 {
     public class Program
@@ -11,12 +16,16 @@ namespace Application.Web
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            /// Register AutoMapper, dll classes , Book, BookDto , mapping ( map based on properties name ) 
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             /// Application Context 
             builder.Services.AddDbContext<BookHavenContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
             /// Identity Context
             builder.Services.AddDbContext<IdentityContext>(options =>
@@ -26,15 +35,10 @@ namespace Application.Web
                 .AddEntityFrameworkStores<IdentityContext>()
                 .AddDefaultTokenProviders();
 
-            var app = builder.Build();
 
-            /// adding seed rules 
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                var configuration = app.Services.GetRequiredService<IConfiguration>(); 
-                await SeedRolesAndUsers(services, configuration);
-            }
+           builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -58,50 +62,5 @@ namespace Application.Web
             app.Run();
         }
 
-
-        public static async Task SeedRolesAndUsers(IServiceProvider serviceProvider, IConfiguration configuration)
-        {
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
-            string[] roleNames = { "Admin", "Librarian", "Member" };
-
-            /// adding seed roles 
-            foreach (var roleName in roleNames)
-            {
-                if (!await roleManager.RoleExistsAsync(roleName))
-                {
-                    await roleManager.CreateAsync(new IdentityRole(roleName));
-                }
-            }
-
-            /// Secure Admin Data 
-            var email = configuration["Admin:Email"];
-            var pass = configuration["Admin:Password"];
-            var userName = configuration["Admin:userName"];
-            var FName = configuration["Admin:FName"];
-            var LName = configuration["Admin:LName"];
-
-
-            // Create default admin user
-            var adminUser = await userManager.FindByEmailAsync(email);
-            if (adminUser == null)
-            {
-                var user = new ApplicationUser
-                {
-                    UserName =userName ,
-                    Email = email,
-                    FName = FName,
-                    LName = LName
-                };
-
-                var createUser = await userManager.CreateAsync(user, pass);
-
-                if (createUser.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(user, "Admin"); /// adding user to identity with admin role
-                }
-            }
-        }
     }
 }

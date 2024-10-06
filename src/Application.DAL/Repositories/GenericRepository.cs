@@ -31,6 +31,7 @@ namespace Application.DAL.Repositories
         public async Task DeleteAsync(int id)
         {
             var entity = await GetByIdAsync(id);
+
             if (entity != null) _dbset.Remove(entity);
         }
     }

@@ -2,5 +2,7 @@
 {
     public class LoggingMiddleWare
     {
+
+        public LoggingMiddleWare() { }
     }
 }

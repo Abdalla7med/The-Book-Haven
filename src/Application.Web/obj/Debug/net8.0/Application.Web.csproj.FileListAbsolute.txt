@@ -147,3 +147,5 @@ D:\Back end\DEPI\Final Project\src\Application.Web\bin\Debug\net8.0\Microsoft.As
 D:\Back end\DEPI\Final Project\src\Application.Web\bin\Debug\net8.0\Microsoft.Extensions.Identity.Core.dll
 D:\Back end\DEPI\Final Project\src\Application.Web\bin\Debug\net8.0\Microsoft.Extensions.Identity.Stores.dll
 D:\Back end\DEPI\Final Project\src\Application.Web\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
+D:\Back end\DEPI\Final Project\src\Application.Web\bin\Debug\net8.0\AutoMapper.dll
+D:\Back end\DEPI\Final Project\src\Application.Web\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll

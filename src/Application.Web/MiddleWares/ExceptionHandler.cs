@@ -2,6 +2,9 @@
 {
     public class ExceptionHandler
     {
+        public ExceptionHandler() { }
+
+
 
     }
 }
