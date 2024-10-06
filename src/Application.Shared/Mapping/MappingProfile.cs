@@ -5,31 +5,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Application.Shared.Dtos;
+using Application.Shared;
 
-namespace Application.Shared.Mapping
+using AutoMapper;
+
+public class MappingProfile : Profile
 {
-    public class MappingProfile: Profile
+    public MappingProfile()
     {
-        public MappingProfile()
-        {
-            CreateMap<Book, BookDto>()
-                .ReverseMap();  // This creates a mapping for both directions
+        // Book mappings
+        CreateMap<Book, ReadBookDto>().ReverseMap();
+        CreateMap<CreateBookDto, Book>().ReverseMap();
+        CreateMap<UpdateBookDto, Book>().ReverseMap(); 
 
-            CreateMap<ApplicationUser, ApplicationUserDto>()
-                .ReverseMap();
+        // Penalty mappings
+        CreateMap<Penalty, ReadPenaltyDto>().ReverseMap();
+        CreateMap<CreatePenaltyDto, Penalty>().ReverseMap();
+        CreateMap<UpdatePenaltyDto, Penalty>().ReverseMap();
 
-            CreateMap<Category, CategoryDto>()
-                .ReverseMap();
+        // Loan mappings
+        CreateMap<Loan, ReadLoanDto>().ReverseMap();
+        CreateMap<CreateLoanDto, Loan>().ReverseMap();
+        CreateMap<UpdateLoanDto, Loan>().ReverseMap();
 
-            CreateMap<Penalty, PenaltyDto>()
-                .ReverseMap();
+        // Category mappings
+        CreateMap<Category, ReadCategoryDto>().ReverseMap();
+        CreateMap<CreateCategoryDto, Category>().ReverseMap();
+        CreateMap<UpdateCategoryDto, Category>().ReverseMap();
 
-            CreateMap<Loan, LoanDto>()
-                .ReverseMap();
-
-
-        }
-
+        // ApplicationUser mappings
+        CreateMap<ApplicationUser, ReadUserDto>().ReverseMap();
+        CreateMap<UpdateUserDto, ApplicationUser>().ReverseMap();
+        CreateMap<CreateUserDto, ApplicationUser>().ReverseMap();
     }
 }
+

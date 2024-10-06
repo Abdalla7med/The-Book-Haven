@@ -15,7 +15,7 @@ namespace Application.DAL
         public string ISBN { get; set; }
         public int PublicationYear { get; set; }
         public int AvailableCopies { get; set; }
-        public bool IsDeleted { set; get; } /// Soft Delete Property 
+        public bool IsDeleted { set; get; } = false; /// Soft Delete Property 
         //  Relationships
         public int? CategoryId { get; set; }
         public Category Category { get; set; }

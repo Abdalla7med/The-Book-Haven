@@ -15,7 +15,7 @@ namespace Application.DAL
         public DateTime DueDate { get; set; }
         public DateTime? ReturnDate { get; set; }
         public bool IsReturned { get; set; }
-        public bool IsDeleted { set; get; }
+        public bool IsDeleted { set; get; } = false;
 
         /// relations
         public int BookId { get; set; }

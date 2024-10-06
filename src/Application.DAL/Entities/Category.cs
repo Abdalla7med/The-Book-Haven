@@ -14,7 +14,7 @@ namespace Application.DAL
 
         [StringLength(25)]
         public string Name { get; set; }
-        public bool IsDeleted { set; get; }
+        public bool IsDeleted { set; get; } = false;
         // relations
         public ICollection<Book>? Books { get; set; }
     }

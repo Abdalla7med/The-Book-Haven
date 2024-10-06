@@ -71,7 +71,6 @@ namespace Application.DAL.Context
                 .WithOne(l => l.Penalty)
                 .HasForeignKey<Penalty>(p => p.LoanId);
 
-
             base.OnModelCreating(modelBuilder);
         }
 
