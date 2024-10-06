@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Shared
+namespace Application.Shared.Dtos
 {
-    public class AuthorDto
+    public class ApplicationUserDto
     {
-
     }
 }

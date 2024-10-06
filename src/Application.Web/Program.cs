@@ -26,13 +26,8 @@ namespace Application.Web
             builder.Services.AddDbContext<BookHavenContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
-            /// Identity Context
-            builder.Services.AddDbContext<IdentityContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection")));
-
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<IdentityContext>()
+                .AddEntityFrameworkStores<BookHavenContext>()
                 .AddDefaultTokenProviders();
 
 

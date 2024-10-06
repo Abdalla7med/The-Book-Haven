@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Application.DAL.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.DAL
 {
-    public class Book
+    public class Book : ISoftDeleteable
     {
         [Key]
         public int BookId { get; set; }
@@ -14,12 +15,12 @@ namespace Application.DAL
         public string ISBN { get; set; }
         public int PublicationYear { get; set; }
         public int AvailableCopies { get; set; }
-        public bool IsDeleted { set; get; }
+        public bool IsDeleted { set; get; } /// Soft Delete Property 
         //  Relationships
         public int? CategoryId { get; set; }
         public Category Category { get; set; }
 
-        public ICollection<Author> Authors { get; set; }
+        public ICollection<ApplicationUser> Authors { get; set; }
 
         public ICollection<Loan> Loans { set; get; }
 

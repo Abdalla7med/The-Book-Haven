@@ -15,8 +15,6 @@ namespace Application.DAL.UnitOfWork
 
         public IBookRepository BookRepository { get; }
         public ICategoryRepository CategoryRepository { get; }
-        public IAuthorRepository AuthorRepository { get; }
-        public IMemberRepository MemberRepository { get; }
         public ILoanRepository LoanRepository { get; }
         public IPenaltyRepository PenaltyRepository { get; }
         public UnitOfWork(BookHavenContext context) 
@@ -24,9 +22,7 @@ namespace Application.DAL.UnitOfWork
             _context = context;
             BookRepository = new BookRepository(context);
             CategoryRepository = new CategoryRepository(context);
-            MemberRepository = new MemberRepository(context);
             CategoryRepository = new CategoryRepository(context);
-            AuthorRepository = new AuthorRepository(context);
             LoanRepository = new LoanRepository(context);
             PenaltyRepository = new PenaltyRepository(context);     
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Application.DAL.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.DAL
 {
-    public class Penalty
+    public class Penalty : ISoftDeleteable
     {
         public int PenaltyId { get; set; }
         
@@ -16,11 +17,14 @@ namespace Application.DAL
         public decimal Amount { get; set; }
         public bool IsPaid { set; get; }
 
+        public bool IsDeleted { set; get; }
         // Relations
         public int? LoanId { get; set; }
-        public Loan Loan { get; set; }
-
-        public int? MemberId { set; get; }
-        public Member Member { set; get; }
+        public Loan? Loan { get; set; }
+        /// <summary>
+        /// IdentityUser ID is a GUID 
+        /// </summary>
+        public string? MemberId { set; get; }
+        public ApplicationUser? Member { set; get; }
     }
 }

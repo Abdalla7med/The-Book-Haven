@@ -11,8 +11,6 @@ namespace Application.DAL.UnitOfWork
     {
        IBookRepository BookRepository { get; }
        ICategoryRepository CategoryRepository { get; }
-       IAuthorRepository AuthorRepository { get; }  
-       IMemberRepository MemberRepository { get; }
        ILoanRepository LoanRepository { get; }
        IPenaltyRepository PenaltyRepository { get; }
        Task<int> CompleteAsync();

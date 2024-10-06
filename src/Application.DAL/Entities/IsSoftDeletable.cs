@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Application.DAL.Entities
 {
-    public interface ISoftDeletable
+    public interface ISoftDeleteable
     {
         bool IsDeleted { get; set; }
-        bool IsBlocked { get; set; }
+       
     }
 }

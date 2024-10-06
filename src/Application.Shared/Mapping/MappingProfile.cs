@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Shared.Dtos;
 
 namespace Application.Shared.Mapping
 {
@@ -15,10 +16,7 @@ namespace Application.Shared.Mapping
             CreateMap<Book, BookDto>()
                 .ReverseMap();  // This creates a mapping for both directions
 
-            CreateMap<Member, MemberDto>()
-                .ReverseMap();
-
-            CreateMap<Author, AuthorDto>()
+            CreateMap<ApplicationUser, ApplicationUserDto>()
                 .ReverseMap();
 
             CreateMap<Category, CategoryDto>()
