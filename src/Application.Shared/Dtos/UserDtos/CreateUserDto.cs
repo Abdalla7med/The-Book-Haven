@@ -27,10 +27,10 @@ namespace Application.Shared
 
         // Roles (author, member, admin)
         [Required]
-        public List<string> Roles { get; set; }
+        public string Role { get; set; }
 
         // Author-specific properties
-        public List<int> AuthoredBookIds { get; set; }  // IDs of books the author has written
+        public List<int>? AuthoredBookIds { get; set; }  // IDs of books the author has written
 
         // Member-specific properties (loans/penalties are added later when they occur)
     }

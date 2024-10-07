@@ -39,6 +39,7 @@ public class GenericService<TDto, TEntity> : IService<TDto>
     public async Task UpdateAsync(TDto dto)
     {
         var entity = _mapper.Map<TEntity>(dto);
+
         _repository.UpdateAsync(entity);
         await _unitOfWork.CompleteAsync();
     }

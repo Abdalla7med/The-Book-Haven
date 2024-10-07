@@ -14,17 +14,31 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         // Book mappings
-        CreateMap<Book, ReadBookDto>().ReverseMap();
+        CreateMap<Book, ReadBookDto>()
+        .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+        .ForMember(dest => dest.ISBN, opt => opt.MapFrom(src => src.ISBN))
+        .ForMember(dest => dest.AvailableCopies, opt => opt.MapFrom(src => src.AvailableCopies))
+        .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
+        .ForMember(dest => dest.PublicationYear, opt => opt.MapFrom(src => src.PublicationYear))
+        .ForMember(dest => dest.AuthorNames, opt => opt.MapFrom(src => src.Authors.Select(a => a.FirstName +" "+ a.LastName).ToList()))
+        .ForMember(dest => dest.CoverUrl, opt => opt.MapFrom(src => src.CoverUrl))
+        .ForMember(dest => dest.IsDeleted , opt => opt.MapFrom(src => src.IsDeleted))
+        .ReverseMap();
+
         CreateMap<CreateBookDto, Book>().ReverseMap();
-        CreateMap<UpdateBookDto, Book>().ReverseMap(); 
+        CreateMap<UpdateBookDto, Book>().ReverseMap();
 
         // Penalty mappings
-        CreateMap<Penalty, ReadPenaltyDto>().ReverseMap();
+        CreateMap<Penalty, ReadPenaltyDto>()
+            .ForMember(dest => dest.MemberName, opt => opt.MapFrom(src => src.Member.FirstName+" "+src.Member.LastName))
+            .ReverseMap();
         CreateMap<CreatePenaltyDto, Penalty>().ReverseMap();
         CreateMap<UpdatePenaltyDto, Penalty>().ReverseMap();
 
         // Loan mappings
-        CreateMap<Loan, ReadLoanDto>().ReverseMap();
+        CreateMap<Loan, ReadLoanDto>()
+            .ForMember(dest => dest.MemberName, opt => opt.MapFrom(src =>src.Member.FirstName+" "+ src.Member.LastName))
+            .ReverseMap();
         CreateMap<CreateLoanDto, Loan>().ReverseMap();
         CreateMap<UpdateLoanDto, Loan>().ReverseMap();
 

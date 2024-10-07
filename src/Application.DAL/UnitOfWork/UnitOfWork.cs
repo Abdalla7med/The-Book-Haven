@@ -17,6 +17,7 @@ namespace Application.DAL.UnitOfWork
         public ICategoryRepository CategoryRepository { get; }
         public ILoanRepository LoanRepository { get; }
         public IPenaltyRepository PenaltyRepository { get; }
+        public IUserRepository UserRepository { get; }
         public UnitOfWork(BookHavenContext context) 
         {
             _context = context;
@@ -24,12 +25,13 @@ namespace Application.DAL.UnitOfWork
             CategoryRepository = new CategoryRepository(context);
             CategoryRepository = new CategoryRepository(context);
             LoanRepository = new LoanRepository(context);
-            PenaltyRepository = new PenaltyRepository(context);     
+            PenaltyRepository = new PenaltyRepository(context);  
+            UserRepository = new UserRepository(context);   
         }
 
         public IRepository<TEntity> Repository<TEntity>() where TEntity : class, new()
         {
-            return new GenericRepository<TEntity>(_context);
+            return new GenericRepository<TEntity>(_context);  /// this will return default implementation, so if you've override the Implementation of one method it won't be affected  
         }
 
         public async Task<int> CompleteAsync()

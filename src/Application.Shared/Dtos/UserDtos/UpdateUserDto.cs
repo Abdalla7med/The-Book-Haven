@@ -9,9 +9,6 @@ namespace Application.Shared
 {
     public class UpdateUserDto
     {
-        [Required]
-        public string UserId { get; set; }
-
         [StringLength(25)]
         public string FirstName { get; set; }
 
@@ -19,7 +16,7 @@ namespace Application.Shared
         public string LastName { get; set; }
 
         // Roles (can modify roles if necessary)
-        public List<string> Roles { get; set; }
+        public string Roles { get; set; }
 
         // Block/unblock user (for admin use)
         public bool IsBlocked { get; set; }
@@ -28,13 +25,13 @@ namespace Application.Shared
         public bool IsDeleted { get; set; }
 
         // Optional: Update books for authors
-        public List<int> AuthoredBookIds { get; set; }
+        public List<int>? AuthoredBookIds { get; set; }
 
         // Optional: Update loans for members
-        public List<int> LoanIds { get; set; }
+        public List<int>? LoanIds { get; set; }
 
         // Optional: Update penalties for members
-        public List<int> PenaltyIds { get; set; }
+        public List<int>? PenaltyIds { get; set; }
     }
 
 }

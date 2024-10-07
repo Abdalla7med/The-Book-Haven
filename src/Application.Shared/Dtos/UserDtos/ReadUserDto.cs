@@ -15,14 +15,14 @@ namespace Application.Shared
         public string Email { get; set; }
 
         // Roles
-        public List<string> Roles { get; set; }
+        public string Role { set; get; }
 
         // Author-specific properties
-        public List<CreateBookDto> BooksAuthored { get; set; }  // Books authored by this user
+        public List<ReadBookDto>? BooksAuthored { get; set; }  // Books authored by this user
 
         // Member-specific properties
-        public List<CreateLoanDto> Loans { get; set; }  // Loans this member has made
-        public List<CreatePenaltyDto> Penalties { get; set; }  // Penalties for this member
+        public List<ReadLoanDto> Loans { get; set; }  // Loans this member has made
+        public List<ReadPenaltyDto>? Penalties { get; set; }  // Penalties for this member
 
         public bool IsBlocked { get; set; } // Whether the user is blocked (applies to members)
     }

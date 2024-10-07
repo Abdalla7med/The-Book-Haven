@@ -13,6 +13,7 @@ namespace Application.DAL.UnitOfWork
        ICategoryRepository CategoryRepository { get; }
        ILoanRepository LoanRepository { get; }
        IPenaltyRepository PenaltyRepository { get; }
+       IUserRepository UserRepository { get; }
        Task<int> CompleteAsync();
 
         IRepository<T> Repository<T>() where T : class, new();
