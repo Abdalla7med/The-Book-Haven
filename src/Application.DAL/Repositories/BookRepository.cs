@@ -1,4 +1,5 @@
 ﻿using Application.DAL.Context;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,11 @@ namespace Application.DAL.Repositories
     {
 
         public BookRepository(BookHavenContext _context): base(_context) { }
+
+        public override async Task<Book> GetByIdAsync(int id)
+        {
+            return await _dbset.Include(b => b.Loans)  // Include related Loans
+                               .FirstOrDefaultAsync(b => b.BookId == id);
+        }
     }
 }

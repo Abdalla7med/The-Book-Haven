@@ -1,4 +1,5 @@
 ﻿using Application.DAL.Context;
+using Application.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,8 +12,8 @@ namespace Application.DAL.Repositories
     public class GenericRepository<T>:IRepository<T> where T : class, new()
     {
 
-        private readonly BookHavenContext _context;
-        private readonly DbSet<T> _dbset;
+        protected readonly BookHavenContext _context;
+        protected readonly DbSet<T> _dbset;
 
         public GenericRepository(BookHavenContext context)
         {
@@ -20,19 +21,38 @@ namespace Application.DAL.Repositories
             _dbset = context.Set<T>();
         }
 
-        public async Task AddAsync(T entity) => await _dbset.AddAsync(entity);
+        public virtual async Task AddAsync(T entity) => await _dbset.AddAsync(entity);
 
-        public async Task<IEnumerable<T>> GetAllAsync() => await _dbset.ToListAsync();
+        public virtual async Task<IEnumerable<T>> GetAllAsync() => await _dbset.ToListAsync();
 
-        public async Task<T> GetByIdAsync(int id) => await _dbset.FindAsync(id);
+        public virtual async Task<T> GetByIdAsync(int id) => await _dbset.FindAsync(id);
 
-        public async Task UpdateAsync(T entity) => _dbset.Update(entity);
+        public virtual void UpdateAsync(T entity) => _dbset.Update(entity); 
 
-        public async Task DeleteAsync(int id)
+        // Soft Delete Method ( no need to declare it as async method ) 
+        public virtual void  Delete(T entity)
         {
-            var entity = await GetByIdAsync(id);
-
-            if (entity != null) _dbset.Remove(entity);
+            if (entity is ISoftDeleteable softDeleteableEntity)
+            {
+                // Mark the entity as deleted instead of physically removing it
+                 softDeleteableEntity.IsDeleted = true;
+                 UpdateAsync(entity);  // Mark entity as modified for saving later
+            }
+            else
+            {
+                _dbset.Remove(entity); // If not soft deletable, perform actual deletion
+            }
         }
+
+        // Soft Delete by Id Method
+        public virtual async Task DeleteAsyncById(object id)
+        {
+            var entity = await _dbset.FindAsync(id);
+            if (entity != null)
+            {
+                Delete(entity);
+            }
+        }
+
     }
 }

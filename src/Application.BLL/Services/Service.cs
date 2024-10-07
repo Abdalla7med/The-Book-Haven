@@ -45,7 +45,7 @@ public class GenericService<TDto, TEntity> : IService<TDto>
 
     public async Task DeleteAsync(int id)
     {
-        await _repository.DeleteAsync(id);
+        await _repository.DeleteAsyncById(id);
         await _unitOfWork.CompleteAsync();
     }
 }

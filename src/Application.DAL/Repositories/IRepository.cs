@@ -11,8 +11,9 @@ namespace Application.DAL.Repositories
         Task<T> GetByIdAsync(int id);
         Task<IEnumerable<T>> GetAllAsync();
         Task AddAsync(T entity);
-        Task UpdateAsync(T entity);
-        Task DeleteAsync(int id);
+        void UpdateAsync(T entity);
+        void Delete(T entity);
+        Task DeleteAsyncById(object id); // for case of GUID
 
     }
 }

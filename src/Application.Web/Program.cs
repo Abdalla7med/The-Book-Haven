@@ -6,7 +6,6 @@ using Application.DAL.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Application.Shared.Mapping;
 using AutoMapper;
 namespace Application.Web
 {
