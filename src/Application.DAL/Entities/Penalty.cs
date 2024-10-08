@@ -11,19 +11,19 @@ namespace Application.DAL
 {
     public class Penalty : ISoftDeleteable
     {
-        public int PenaltyId { get; set; }
+        public Guid PenaltyId { get; set; } = Guid.NewGuid();
         
         [Precision(3,3), DataType(DataType.Currency)]
         public decimal Amount { get; set; }
         public bool IsPaid { set; get; }
         public bool IsDeleted { set; get; } = false;
         // Relations
-        public int? LoanId { get; set; }
+        public Guid? LoanId { get; set; }
         public Loan? Loan { get; set; }
         /// <summary>
         /// IdentityUser ID is a GUID 
         /// </summary>
-        public string? MemberId { set; get; }
+        public Guid? MemberId { set; get; }
         public ApplicationUser? Member { set; get; }
     }
 }

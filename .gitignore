@@ -1,1 +1,16 @@
+# Ignore all compiler-generated files and folders
+src/Application.BLL/bin
+src/Application.BLL/obj
+src/Application.DAL/obj
+src/Application.DAL/obj
+src/Application.Shared/obj
+src/Application.Shared/obj
+src/Application.Web/obj
+src/Application.web/obj
+
+# Ignore other common files
+.log
 .vs
+.vscode/
+.DS_Store
+.cache

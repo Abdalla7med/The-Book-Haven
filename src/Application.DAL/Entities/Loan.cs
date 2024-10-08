@@ -9,7 +9,7 @@ namespace Application.DAL
 {
     public class Loan : ISoftDeleteable
     {
-        public int LoanId { get; set; }
+        public Guid LoanId { get; set; } = Guid.NewGuid();
 
         public DateTime LoanDate { get; set; }
         public DateTime DueDate { get; set; }
@@ -18,12 +18,13 @@ namespace Application.DAL
         public bool IsDeleted { set; get; } = false;
 
         /// relations
-        public int BookId { get; set; }
+        public Guid? BookId { get; set; }
         public Book Book { get; set; }
+        /// <summary>
         /// <summary>
         ///  IdentityUser Id is a GUID ( string ) 
         /// </summary>
-        public string? MemberId { get; set; }
+        public Guid? MemberId { get; set; }
         public ApplicationUser? Member { get; set; }
         public Penalty? Penalty { get; set; }
     }

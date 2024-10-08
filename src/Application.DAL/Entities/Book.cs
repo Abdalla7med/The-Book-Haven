@@ -6,7 +6,7 @@ namespace Application.DAL
     public class Book : ISoftDeleteable
     {
         [Key]
-        public int BookId { get; set; }
+        public Guid BookId { get; set; } = Guid.NewGuid(); // auto-generated 
         [StringLength(25)]
         public string Title { get; set; }
 
@@ -17,7 +17,7 @@ namespace Application.DAL
         public int AvailableCopies { get; set; }
         public bool IsDeleted { set; get; } = false; /// Soft Delete Property 
         //  Relationships
-        public int? CategoryId { get; set; }
+        public Guid? CategoryId { get; set; }
         public Category Category { get; set; }
 
         public ICollection<ApplicationUser> Authors { get; set; }

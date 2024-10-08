@@ -10,7 +10,7 @@ namespace Application.DAL
 {
     public class Category : ISoftDeleteable
     {
-        public int CategoryId { get; set; }
+        public Guid CategoryId { get; set; } = Guid.NewGuid();
 
         [StringLength(25)]
         public string Name { get; set; }

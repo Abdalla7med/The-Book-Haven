@@ -14,6 +14,9 @@ namespace Application.DAL.UnitOfWork
        ILoanRepository LoanRepository { get; }
        IPenaltyRepository PenaltyRepository { get; }
        IUserRepository UserRepository { get; }
+       IReportRepository ReportRepository { get; }
+       INotificationRepository NotificationRepository { get; }
+
        Task<int> CompleteAsync();
 
         IRepository<T> Repository<T>() where T : class, new();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -11,7 +12,7 @@ using Microsoft.EntityFrameworkCore.SqlServer;
 
 namespace Application.DAL.Context
 {
-    public class BookHavenContext : IdentityDbContext<ApplicationUser>
+    public class BookHavenContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
 
         public BookHavenContext() : base() { }
@@ -22,10 +23,16 @@ namespace Application.DAL.Context
         public DbSet<Loan> Loans { get; set; }
         public DbSet<Penalty> Penalties { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Notification> Notifications { set; get; }
+        public DbSet<Report> Reports { set; get; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-   
+
+            modelBuilder.Entity<ApplicationUser>()
+            .Property(u => u.Id)
+            .HasColumnType("uniqueidentifier");
+
             /// Book - ApplicationUser(Author)	WrittenBy ( many-to-many )	A book can be written by one or more authors.
             modelBuilder.Entity<Book>()
             .HasMany(b => b.Authors) // Assuming Authors is a navigation property
@@ -70,6 +77,18 @@ namespace Application.DAL.Context
                 .HasOne(p => p.Loan)
                 .WithOne(l => l.Penalty)
                 .HasForeignKey<Penalty>(p => p.LoanId);
+
+            /// Notification - User  ( Many-to-One) user can have  zero or many notification and notification is associated with only one user 
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.User)
+                .WithMany(u => u.Notifications)
+                .HasForeignKey(n => n.UserId);
+
+            /// Report - User ( Many-to-One) User can have zero or many reports and each report is associated with only one user 
+            modelBuilder.Entity<Report>()
+                .HasOne(R => R.ReportUser)
+                .WithMany(U => U.Reports)
+                .HasForeignKey(R => R.ReportedById);
 
             base.OnModelCreating(modelBuilder);
         }

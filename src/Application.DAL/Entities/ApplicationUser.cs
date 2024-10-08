@@ -17,7 +17,7 @@ namespace Application.DAL
     ///  note that we must look at role, because might exist as member with no written books 
     ///  deleted or blocked will be via <LockoutEnd> LockoutEnd>property inherited from IdentityUser 
     /// </summary>
-    public class ApplicationUser: IdentityUser, ISoftDeleteable
+    public class ApplicationUser: IdentityUser<Guid>, ISoftDeleteable
     {
         [StringLength(25)]
         public string? FirstName { get; set; }
@@ -29,6 +29,8 @@ namespace Application.DAL
         public bool IsDeleted { set; get; } = false;
         public bool IsBlocked { set; get; } = false; /// till  now we'll use it as a blocking property instead of LockoutEnd 
 
+        public bool IsPremium { get; set; } = false;
+
         // Navigation property: List of books authored by this user (only applicable if the user is an "Author")
         public ICollection<Book>? BooksAuthored { get; set; }
 
@@ -38,5 +40,8 @@ namespace Application.DAL
         // Navigation property: List of penalties (only applicable if the user is a "Member")
         public ICollection<Penalty>? Penalties { get; set; }
 
+        public ICollection<Notification>? Notifications { set; get; }
+
+        public ICollection<Report>? Reports { get; set; }
     }
 }

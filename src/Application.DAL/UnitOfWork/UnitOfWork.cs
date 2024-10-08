@@ -18,6 +18,8 @@ namespace Application.DAL.UnitOfWork
         public ILoanRepository LoanRepository { get; }
         public IPenaltyRepository PenaltyRepository { get; }
         public IUserRepository UserRepository { get; }
+        public IReportRepository ReportRepository { get; }
+        public INotificationRepository NotificationRepository { get; }
         public UnitOfWork(BookHavenContext context) 
         {
             _context = context;
