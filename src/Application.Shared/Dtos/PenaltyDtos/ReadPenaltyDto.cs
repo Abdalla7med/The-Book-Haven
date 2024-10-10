@@ -12,7 +12,7 @@ namespace Application.Shared
         public decimal Amount { get; set; }
         public bool IsPaid { get; set; }
        
-        public int LoanId { get; set; }
+        public Guid LoanId { get; set; }
         public string? MemberName { get; set; } // handled from BLL 
     }
 

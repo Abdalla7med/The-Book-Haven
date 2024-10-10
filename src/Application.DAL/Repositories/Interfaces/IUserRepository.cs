@@ -10,8 +10,6 @@ namespace Application.DAL.Repositories
     {
         Task<IEnumerable<ApplicationUser>> GetUsersByRoleAsync(string role);
         Task<ApplicationUser> GetUserByNameAsync(string name);
-
-
         Task SoftDeleteUserAsync(Guid id);
         Task BlockUserAsync(Guid id);
 

@@ -50,7 +50,7 @@ namespace Application.DAL
         public async Task<ApplicationUser> GetUserByNameAsync(string name)
         {
 
-            return await _dbset.Where(u => u.FirstName + " " + u.LastName == name); ;
+            return await _dbset.FirstOrDefaultAsync(u => u.FirstName + " " + u.LastName == name);
         }
 
         public async Task<IEnumerable<ApplicationUser>> GetUsersByRoleAsync(string role)

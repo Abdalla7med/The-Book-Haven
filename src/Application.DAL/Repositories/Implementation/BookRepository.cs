@@ -13,9 +13,22 @@ namespace Application.DAL.Repositories
 
         public BookRepository(BookHavenContext _context): base(_context) { }
 
+        public async Task<Book> GetBookByNameAsync(string BookTitle)
+        {
+            return await _dbset.FirstOrDefaultAsync(b => b.Title == BookTitle);
+
+
+        }
+
+        public async Task<Book> GetBooksByCategoryAsync(string CategoryName)
+        {
+            return await _dbset.FirstOrDefaultAsync(b => b.Category.Name == CategoryName);
+        }
+
         public override async Task<Book> GetByIdAsync(Guid id)
         {
-            return await _dbset.Include(b => b.Loans)  // Include related Loans
+            return await _dbset.Include(b => b.Loans) 
+                               .Include(b => b.Authors)
                                .FirstOrDefaultAsync(b => b.BookId == id);
         }
     }

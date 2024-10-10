@@ -23,24 +23,24 @@ namespace Application.BLL
     
         public async Task AddLoan(CreateLoanDto createLoanDto)
         {
-            /// check book exists -> book reposiotry
-            /// user -> userrepos
-            /// loan -> loan 
-            var bookid = Guid.NewGuid();
-            var book = await _unitOfWork.BookRepository.GetByIdAsync(bookid); 
-            if(book != null)
-            {
-                var user = await _unitOfWork.UserRepository.GetByIdAsync();
-                if (user != null)
-                {
-                    await _unitOfWork.LoanRepository.AddAsync(_mapper.Map<Loan>(createLoanDto));
+            ///// check book exists -> book reposiotry
+            ///// user -> userrepos
+            ///// loan -> loan 
+            //var bookid = Guid.NewGuid();
+            //var book = await _unitOfWork.BookRepository.GetByIdAsync(bookid); 
+            //if(book != null)
+            //{
+            //    var user = await _unitOfWork.UserRepository.GetByIdAsync();
+            //    if (user != null)
+            //    {
+            //        await _unitOfWork.LoanRepository.AddAsync(_mapper.Map<Loan>(createLoanDto));
                     
-                    book.AvailableCopies -= 1;
-                    await _unitOfWork.BookRepository.UpdateAsync(book);
-                    await _unitOfWork.CompleteAsync();
+            //        book.AvailableCopies -= 1;
+            //        await _unitOfWork.BookRepository.UpdateAsync(book);
+            //        await _unitOfWork.CompleteAsync();
 
-                }
-            }
+            //    }
+            //}
             
             throw new NotImplementedException();
         }
@@ -50,7 +50,10 @@ namespace Application.BLL
             throw new NotImplementedException();
         }
 
-        
+        public Task DeleteLoan(Guid LoanId)
+        {
+            throw new NotImplementedException();
+        }
 
         public Task<ReadLoanDto> GetBookById(Guid LoanId)
         {
