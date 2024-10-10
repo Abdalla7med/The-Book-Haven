@@ -11,6 +11,9 @@ using AutoMapper;
 
 public class MappingProfile : Profile
 {
+    /// <summary>
+    ///  Just Mapp Read Dto, and we'll map every thing else 
+    /// </summary>
     public MappingProfile()
     {
         // Book mappings
@@ -25,8 +28,12 @@ public class MappingProfile : Profile
         .ForMember(dest => dest.IsDeleted , opt => opt.MapFrom(src => src.IsDeleted))
         .ReverseMap();
 
-        CreateMap<CreateBookDto, Book>().ReverseMap();
-        CreateMap<UpdateBookDto, Book>().ReverseMap();
+        // will map this manually 
+        CreateMap<CreateBookDto, Book>()
+             .ReverseMap();
+
+        CreateMap<UpdateBookDto, Book>()
+            .ReverseMap();
 
         // Penalty mappings
         CreateMap<Penalty, ReadPenaltyDto>()

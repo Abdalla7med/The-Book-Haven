@@ -28,7 +28,9 @@ namespace Application.DAL
         /// Soft Delete Properties 
         public bool IsDeleted { set; get; } = false;
         public bool IsBlocked { set; get; } = false; /// till  now we'll use it as a blocking property instead of LockoutEnd 
-
+        
+        [Required]
+        public string Role { set; get; }
         public bool IsPremium { get; set; } = false;
 
         // Navigation property: List of books authored by this user (only applicable if the user is an "Author")

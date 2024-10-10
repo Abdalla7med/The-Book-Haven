@@ -18,11 +18,11 @@ namespace Application.DAL
         public bool IsDeleted { set; get; } = false; /// Soft Delete Property 
         //  Relationships
         public Guid? CategoryId { get; set; }
-        public Category Category { get; set; }
+        public Category Category { get; set; } // nav property associated with category 
 
         public ICollection<ApplicationUser> Authors { get; set; }
 
-        public ICollection<Loan> Loans { set; get; }
+        public ICollection<Loan> Loans { set; get; } // one - many mapping of relation btw book and laon 
 
 
     }

@@ -1,5 +1,6 @@
 ﻿using Application.DAL.Context;
 using Application.DAL.Repositories;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,8 @@ namespace Application.DAL.UnitOfWork
     public class UnitOfWork:IUnitOfWork
     {
         private readonly BookHavenContext _context;
-        private bool disposedValue = false;
 
+        private bool disposedValue = false;
         public IBookRepository BookRepository { get; }
         public ICategoryRepository CategoryRepository { get; }
         public ILoanRepository LoanRepository { get; }
@@ -20,7 +21,7 @@ namespace Application.DAL.UnitOfWork
         public IUserRepository UserRepository { get; }
         public IReportRepository ReportRepository { get; }
         public INotificationRepository NotificationRepository { get; }
-        public UnitOfWork(BookHavenContext context) 
+        public UnitOfWork(BookHavenContext context, UserManager<ApplicationUser> _userManager) 
         {
             _context = context;
             BookRepository = new BookRepository(context);
@@ -28,7 +29,7 @@ namespace Application.DAL.UnitOfWork
             CategoryRepository = new CategoryRepository(context);
             LoanRepository = new LoanRepository(context);
             PenaltyRepository = new PenaltyRepository(context);  
-            UserRepository = new UserRepository(context);   
+            UserRepository = new UserRepository(context, _userManager);   
         }
 
         public IRepository<TEntity> Repository<TEntity>() where TEntity : class, new()

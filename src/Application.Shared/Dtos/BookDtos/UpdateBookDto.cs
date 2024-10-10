@@ -10,7 +10,7 @@ namespace Application.Shared
     public class UpdateBookDto
     {
         [Required]
-        public int BookId { get; set; }
+        public Guid BookId { get; set; }
 
         [StringLength(25)]
         public string Title { get; set; }
@@ -22,7 +22,7 @@ namespace Application.Shared
         public int PublicationYear { get; set; }
         public int AvailableCopies { get; set; }
 
-        public int? CategoryId { get; set; }  // Update category if necessary
+        public Guid CategoryId { get; set; }  // Update category if necessary
 
         public List<string> AuthorNames { get; set; }  // Update authors
 

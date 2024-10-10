@@ -25,13 +25,13 @@ namespace Application.Shared
         public bool IsDeleted { get; set; }
 
         // Optional: Update books for authors
-        public List<int>? AuthoredBookIds { get; set; }
+        public List<Guid>? AuthoredBookIds { get; set; }
 
         // Optional: Update loans for members
-        public List<int>? LoanIds { get; set; }
+        public List<Guid>? LoanIds { get; set; }
 
         // Optional: Update penalties for members
-        public List<int>? PenaltyIds { get; set; }
+        public List<Guid>? PenaltyIds { get; set; }
     }
 
 }

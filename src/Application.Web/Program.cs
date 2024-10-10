@@ -11,7 +11,7 @@ namespace Application.Web
 {
     public class Program
     {
-        public async static Task Main(string[] args)
+        public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -21,18 +21,42 @@ namespace Application.Web
 
             /// Register AutoMapper, dll classes , Book, BookDto , mapping ( map based on properties name ) 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+           
+            
             /// Application Context 
             builder.Services.AddDbContext<BookHavenContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<BookHavenContext>()
                 .AddDefaultTokenProviders();
 
+            /// Adding Authorization Policies 
+           builder.Services.AddAuthorization(
+               options =>
+                           {
+                               options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+                               options.AddPolicy("RequireAuthorRole", policy => policy.RequireRole("Author"));
+                               options.AddPolicy("RequireMemberRole", policy => policy.RequireRole("Member"));
+                           }
+           );
 
-           builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+           /// DI Registration
+           builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); 
+           builder.Services.AddScoped<IBookService, BookService>();       
+           builder.Services.AddScoped<ICategoryService, CategoryService>();
+           builder.Services.AddScoped<ILoanService, LoanService>();
+           builder.Services.AddScoped<IPenaltyService, PenaltyService>();
+           builder.Services.AddScoped<IUserService, UserService>();
+
 
             var app = builder.Build();
+
+
+            // middleware registrations...
+
+            app.UseMiddleware<ExceptionHandler>();
+
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

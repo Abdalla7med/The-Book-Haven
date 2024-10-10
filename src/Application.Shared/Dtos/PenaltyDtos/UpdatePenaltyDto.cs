@@ -10,7 +10,7 @@ namespace Application.Shared
     public class UpdatePenaltyDto
     {
         [Required]
-        public int PenaltyId { get; set; }
+        public Guid PenaltyId { get; set; }
         public bool IsPaid { get; set; }
 
         // Admin controls soft-delete

@@ -10,7 +10,7 @@ namespace Application.Shared
     public class UpdateLoanDto
     {
         [Required]
-        public int LoanId { get; set; }
+        public Guid LoanId { get; set; }
         public DateTime? ReturnDate { get; set; }  // Update return date if the book is returned
         public bool IsReturned { get; set; }
 

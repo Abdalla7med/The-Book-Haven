@@ -11,7 +11,7 @@ namespace Application.Shared
     public class CreatePenaltyDto
     {
         [Required]
-        public int LoanId { get; set; }
+        public Guid LoanId { get; set; }
 
         [Required, Precision(3, 3)]
         public decimal Amount { get; set; }

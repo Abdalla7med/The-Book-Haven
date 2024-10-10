@@ -19,7 +19,7 @@ namespace Application.DAL.UnitOfWork
 
        Task<int> CompleteAsync();
 
-        IRepository<T> Repository<T>() where T : class, new();
+        IRepository<T> Repository<T>() where T : class, new(); 
 
     }
 }

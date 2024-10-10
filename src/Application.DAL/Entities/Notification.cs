@@ -11,7 +11,7 @@ namespace Application.DAL
     {
         public Guid NotificationId { get; set; } = Guid.NewGuid();
         public Guid UserId { get; set; }  // Foreign Key to ApplicationUser GUID
-        public Guid Message { get; set; }
+        public string Message { get; set; }
         public DateTime SentAt { get; set; }
         public bool IsRead { get; set; } = false;  // Indicates if the notification has been read
         public bool IsDeleted { set; get; } = false;

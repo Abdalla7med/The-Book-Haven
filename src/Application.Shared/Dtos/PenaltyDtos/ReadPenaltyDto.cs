@@ -8,7 +8,7 @@ namespace Application.Shared
 {
     public class ReadPenaltyDto
     {
-        public int PenaltyId { get; set; }
+        public Guid PenaltyId { get; set; }
         public decimal Amount { get; set; }
         public bool IsPaid { get; set; }
        

@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace Application.DAL.Repositories
 {
-    public interface IUserRepository:IRepository<ApplicationUser>
+    public interface IUserRepository : IRepository<ApplicationUser>
     {
-        Task<ApplicationUser> GetByIdAsync(Guid userId);  // Overloaded method accepting GUID
+        Task<IEnumerable<ApplicationUser>> GetUsersByRoleAsync(string role);
+        Task<ApplicationUser> GetUserByNameAsync(string name);
+
+
+        Task SoftDeleteUserAsync(Guid id);
+        Task BlockUserAsync(Guid id);
+
     }
 }

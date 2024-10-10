@@ -8,7 +8,7 @@ namespace Application.Shared
 {
     public class ReadUserDto
     {
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
@@ -21,9 +21,8 @@ namespace Application.Shared
         public List<ReadBookDto>? BooksAuthored { get; set; }  // Books authored by this user
 
         // Member-specific properties
-        public List<ReadLoanDto> Loans { get; set; }  // Loans this member has made
+        public List<ReadLoanDto>? Loans { get; set; }  // Loans this member has made
         public List<ReadPenaltyDto>? Penalties { get; set; }  // Penalties for this member
-
         public bool IsBlocked { get; set; } // Whether the user is blocked (applies to members)
     }
 
