@@ -15,6 +15,6 @@ namespace Application.BLL
         Task UpdateBook(UpdateBookDto updateBookDto);
         Task DeleteBook(Guid bookId);   
         Task<bool> IsBookAvailable(Guid bookId); // Check for both delted and available copies exists
-        
+   
     }
 }

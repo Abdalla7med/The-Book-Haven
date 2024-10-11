@@ -50,9 +50,20 @@ public class MappingProfile : Profile
         CreateMap<UpdateLoanDto, Loan>().ReverseMap();
 
         // Category mappings
-        CreateMap<Category, ReadCategoryDto>().ReverseMap();
-        CreateMap<CreateCategoryDto, Category>().ReverseMap();
-        CreateMap<UpdateCategoryDto, Category>().ReverseMap();
+        CreateMap<Category, ReadCategoryDto>()
+            .ForMember(catDto => catDto.Name , opt=> opt.MapFrom(src => src.Name))
+            .ForMember(catDto => catDto.IsDeleted, opt => opt.MapFrom(src => src.IsDeleted))
+            .ForMember(catDto => catDto.Books, opt => opt.MapFrom(src => src.Books))
+            .ReverseMap();
+
+        CreateMap<CreateCategoryDto, Category>()
+            .ForMember(Category => Category.Name, opt => opt.MapFrom(src => src.Name))
+            .ReverseMap();
+
+        CreateMap<UpdateCategoryDto, Category>()
+            .ForMember(Category => Category.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(Category => Category.CategoryId, opt => opt.MapFrom(src => src.CategoryId))
+            .ReverseMap();
 
         // ApplicationUser mappings
         CreateMap<ApplicationUser, ReadUserDto>().ReverseMap();

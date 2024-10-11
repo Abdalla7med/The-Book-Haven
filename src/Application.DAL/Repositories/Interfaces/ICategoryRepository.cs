@@ -8,6 +8,13 @@ namespace Application.DAL.Repositories
 {
     public interface ICategoryRepository:IRepository<Category>
     {
+        /// <summary>
+        /// will be used for case of getting category books, and for check if category exists 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        Task<Category> GetCategory(string name);
+      
 
     }
 }

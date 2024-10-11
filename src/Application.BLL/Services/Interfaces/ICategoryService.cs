@@ -14,6 +14,5 @@ namespace Application.BLL
         Task<ReadCategoryDto> GetCategoryById(Guid CategoryId);
         Task UpdateCategory(UpdateCategoryDto updateCategoryDto);
         Task DeleteCategory(Guid CategoryId);
-        Task<bool> IsCategoryExists(string name); // Check if Category deleted or not 
     }
 }

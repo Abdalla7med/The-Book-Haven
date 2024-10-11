@@ -18,7 +18,7 @@ namespace Application.Shared
         public int AvailableCopies { get; set; }
 
         // Admin controls the soft-delete feature
-        public bool IsDeleted { get; set; }  // Admin-specific field for soft delete
+        public bool IsDeleted { get; set; } = false;  // Admin-specific field for soft delete
     }
 
 }

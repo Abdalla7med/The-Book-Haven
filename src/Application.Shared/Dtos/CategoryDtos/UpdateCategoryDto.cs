@@ -8,6 +8,7 @@ namespace Application.Shared
 {
     public class UpdateCategoryDto
     {
+        public Guid CategoryId { set; get; }
         public string Name { set; get; }
 
         // Admin controls soft-delete

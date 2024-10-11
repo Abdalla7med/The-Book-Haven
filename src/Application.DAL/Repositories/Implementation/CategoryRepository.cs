@@ -17,5 +17,7 @@ namespace Application.DAL.Repositories
             return await _dbset.Include(C => C.Books)
                 .FirstOrDefaultAsync(C => C.CategoryId == id);
         }
+
+        public async Task<Category> GetCategory(string name) => await _dbset.Include(C => C.Books).FirstOrDefaultAsync(C => C.Name == name);
     }
 }
