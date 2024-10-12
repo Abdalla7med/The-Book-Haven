@@ -1,4 +1,5 @@
 ﻿using Application.DAL.Repositories;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,16 @@ namespace Application.DAL.UnitOfWork
        IPenaltyRepository PenaltyRepository { get; }
        IUserRepository UserRepository { get; }
        IReportRepository ReportRepository { get; }
-       INotificationRepository NotificationRepository { get; }
+        
+       //INotificationRepository NotificationRepository { get; }
+        Task<int> CompleteAsync();
+        Task<IDbContextTransaction> BeginTransactionAsync();
 
-       Task<int> CompleteAsync();
-
+        /// <summary>
+        ///  Follow Reflection 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         IRepository<T> Repository<T>() where T : class, new(); 
 
     }

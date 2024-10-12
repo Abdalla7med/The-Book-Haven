@@ -36,6 +36,7 @@ namespace Application.BLL
         {
             // Check if category already exists by name
             var existingCategory = await _unitOfWork.CategoryRepository.GetCategory(createCategoryDto.Name);
+
             if (existingCategory != null)
                 throw new ArgumentException($"Category with the name '{createCategoryDto.Name}' already exists.");
 

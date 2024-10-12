@@ -37,13 +37,11 @@ namespace Application.DAL
         public ICollection<Book>? BooksAuthored { get; set; }
 
         // Navigation property: List of loans (only applicable if the user is a "Member")
-        public ICollection<Loan>? Loans { get; set; }
+        public ICollection<Loan>? Loans { get; set; } = new List<Loan>();
 
         // Navigation property: List of penalties (only applicable if the user is a "Member")
-        public ICollection<Penalty>? Penalties { get; set; }
+        public ICollection<Penalty>? Penalties { get; set; } = new List<Penalty>();
 
-        public ICollection<Notification>? Notifications { set; get; }
-
-        public ICollection<Report>? Reports { get; set; }
+       
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Application.DAL.Context;
 using Application.DAL.Repositories;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,8 +20,9 @@ namespace Application.DAL.UnitOfWork
         public ILoanRepository LoanRepository { get; }
         public IPenaltyRepository PenaltyRepository { get; }
         public IUserRepository UserRepository { get; }
+
         public IReportRepository ReportRepository { get; }
-        public INotificationRepository NotificationRepository { get; }
+        //public INotificationRepository NotificationRepository { get; }
         public UnitOfWork(BookHavenContext context, UserManager<ApplicationUser> _userManager) 
         {
             _context = context;
@@ -28,9 +30,16 @@ namespace Application.DAL.UnitOfWork
             CategoryRepository = new CategoryRepository(context);
             CategoryRepository = new CategoryRepository(context);
             LoanRepository = new LoanRepository(context);
-            PenaltyRepository = new PenaltyRepository(context);  
+            PenaltyRepository = new PenaltyRepository(context);
+            ReportRepository = new ReportRepository(context);
             UserRepository = new UserRepository(context, _userManager);   
         }
+       
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await _context.Database.BeginTransactionAsync();
+        }
+        
 
         public IRepository<TEntity> Repository<TEntity>() where TEntity : class, new()
         {
@@ -52,7 +61,7 @@ namespace Application.DAL.UnitOfWork
                     _context.Dispose();
                 }
 
-                //TODO: free unmanaged resources(unmanaged objects) and override finalizer
+                //TODO: free resources(unmanaged objects) and override finalizer
                 //TODO: set large fields to null
                 disposedValue = true;
             }

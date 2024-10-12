@@ -23,7 +23,6 @@ namespace Application.DAL.Context
         public DbSet<Loan> Loans { get; set; }
         public DbSet<Penalty> Penalties { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<Notification> Notifications { set; get; }
         public DbSet<Report> Reports { set; get; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -78,17 +77,17 @@ namespace Application.DAL.Context
                 .WithOne(l => l.Penalty)
                 .HasForeignKey<Penalty>(p => p.LoanId);
 
-            /// Notification - User  ( Many-to-One) user can have  zero or many notification and notification is associated with only one user 
-            modelBuilder.Entity<Notification>()
-                .HasOne(n => n.User)
-                .WithMany(u => u.Notifications)
-                .HasForeignKey(n => n.UserId);
+            ///// Notification - User  ( Many-to-One) user can have  zero or many notification and notification is associated with only one user 
+            //modelBuilder.Entity<Notification>()
+            //    .HasOne(n => n.User)
+            //    .WithMany(u => u.Notifications)
+            //    .HasForeignKey(n => n.UserId);
 
             /// Report - User ( Many-to-One) User can have zero or many reports and each report is associated with only one user 
-            modelBuilder.Entity<Report>()
-                .HasOne(R => R.ReportUser)
-                .WithMany(U => U.Reports)
-                .HasForeignKey(R => R.ReportedById);
+            //modelBuilder.Entity<Report>()
+            //    .HasOne(R => R.ReportUser)
+            //    .WithMany(U => U.Reports)
+            //    .HasForeignKey(R => R.ReportedById);
 
             base.OnModelCreating(modelBuilder);
         }

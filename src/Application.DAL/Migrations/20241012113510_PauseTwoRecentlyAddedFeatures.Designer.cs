@@ -4,6 +4,7 @@ using Application.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Application.DAL.Migrations
 {
     [DbContext(typeof(BookHavenContext))]
-    partial class BookHavenContextModelSnapshot : ModelSnapshot
+    [Migration("20241012113510_PauseTwoRecentlyAddedFeatures")]
+    partial class PauseTwoRecentlyAddedFeatures
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

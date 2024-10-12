@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.BLL.Services
+namespace Application.BLL.Services.Implementation
 {
-    public interface INotificationService
+    internal class ReportService
     {
-
     }
 }

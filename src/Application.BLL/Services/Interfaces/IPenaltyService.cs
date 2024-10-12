@@ -11,7 +11,8 @@ namespace Application.BLL
     {
         Task<IEnumerable<ReadPenaltyDto>> AllPenalties();
         Task<ReadPenaltyDto> GetLByPenaltiesByMember(Guid MemberId);
-        Task UpdatePenalty(UpdatePenaltyDto updatePenaltyto);
+        Task PayPenalty(Guid loanId, decimal amount);
+        Task UpdatePenalty(UpdatePenaltyDto updatePenaltyDto);
         Task DeletePenalty(Guid PenaltyId);
         Task<bool> IsPenaltyPaid(Guid PenaltyId); // Check if Penalty Paid or not 
     }

@@ -11,6 +11,11 @@ namespace Application.Shared
     {
         [Required]
         public Guid LoanId { get; set; }
+
+        /// <summary>
+        /// Incase of updating the period of loaning 
+        /// </summary>
+        public DateTime DueTime { get; set; }
         public DateTime? ReturnDate { get; set; }  // Update return date if the book is returned
         public bool IsReturned { get; set; }
 
