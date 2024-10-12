@@ -12,6 +12,8 @@ namespace Application.Shared
     {
         [Required]
         public Guid LoanId { get; set; }
+        [Required]
+        public Guid MemberId { get; set; } 
 
         [Required, Precision(3, 3)]
         public decimal Amount { get; set; }

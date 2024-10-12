@@ -8,5 +8,8 @@ namespace Application.DAL.Repositories
 {
     public interface IPenaltyRepository:IRepository<Penalty>
     {
+
+        Task<IEnumerable<Penalty>> GetPenaltyByMember(Guid MemberId);
+        Task<Penalty> GetPenaltyByLoan(Guid LoanId);
     }
 }

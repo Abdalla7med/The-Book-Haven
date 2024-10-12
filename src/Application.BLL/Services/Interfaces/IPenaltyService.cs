@@ -10,10 +10,13 @@ namespace Application.BLL
     public interface IPenaltyService
     {
         Task<IEnumerable<ReadPenaltyDto>> AllPenalties();
-        Task<ReadPenaltyDto> GetLByPenaltiesByMember(Guid MemberId);
+        Task<ReadPenaltyDto> GetPenaltyByLoan(Guid LoanId);
+        Task<IEnumerable<ReadPenaltyDto>> GetPenaltiesByMember(Guid MemberId);
         Task PayPenalty(Guid loanId, decimal amount);
-        Task UpdatePenalty(UpdatePenaltyDto updatePenaltyDto);
-        Task DeletePenalty(Guid PenaltyId);
-        Task<bool> IsPenaltyPaid(Guid PenaltyId); // Check if Penalty Paid or not 
+        Task AddPenalty(CreatePenaltyDto createPenaltyDto);
+
+
+        //Task DeletePenalty(Guid PenaltyId);
+        //Task<bool> IsPenaltyPaid(Guid PenaltyId); // Check if Penalty Paid or not 
     }
 }
