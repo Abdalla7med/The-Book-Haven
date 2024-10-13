@@ -10,6 +10,8 @@ namespace Application.Shared
     public class CreateCategoryDto
     {
         [Required]
+        [MinLength(2,ErrorMessage = "Category Name Must be Greater Than One Character")]
+        [MaxLength(25, ErrorMessage = "Category Name Must be Less Than 25 Characters")]
         public string Name { get; set; }    
     }
 }

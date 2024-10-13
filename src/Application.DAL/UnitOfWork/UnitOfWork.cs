@@ -21,7 +21,7 @@ namespace Application.DAL.UnitOfWork
         public IPenaltyRepository PenaltyRepository { get; }
         public IUserRepository UserRepository { get; }
 
-        public IReportRepository ReportRepository { get; }
+        //public IReportRepository ReportRepository { get; }
         //public INotificationRepository NotificationRepository { get; }
         public UnitOfWork(BookHavenContext context, UserManager<ApplicationUser> _userManager) 
         {
@@ -31,7 +31,7 @@ namespace Application.DAL.UnitOfWork
             CategoryRepository = new CategoryRepository(context);
             LoanRepository = new LoanRepository(context);
             PenaltyRepository = new PenaltyRepository(context);
-            ReportRepository = new ReportRepository(context);
+           
             UserRepository = new UserRepository(context, _userManager);   
         }
        

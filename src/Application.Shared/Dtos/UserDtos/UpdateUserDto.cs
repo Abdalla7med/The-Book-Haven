@@ -15,6 +15,9 @@ namespace Application.Shared
         [StringLength(25)]
         public string LastName { get; set; }
 
+        [EmailAddress]
+        public string Email { set; get; }
+
         // Roles (can modify roles if necessary)
         public string Roles { get; set; }
 

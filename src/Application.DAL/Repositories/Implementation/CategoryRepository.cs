@@ -12,12 +12,17 @@ namespace Application.DAL.Repositories
     {
         public CategoryRepository(BookHavenContext _context) : base(_context) { }
 
-        public override async Task<Category> GetByIdAsync(Guid id)
-        {
-            return await _dbset.Include(C => C.Books)
-                .FirstOrDefaultAsync(C => C.CategoryId == id);
-        }
+        /// <summary>
+        ///  override Implementation, Category , Author 
+        ///  override Implementation and behavior remain the same 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public override async Task<Category> GetByIdAsync(Guid id) => await _dbset.Include(C => C.Books) 
+                                                                                  .FirstOrDefaultAsync(C => C.CategoryId == id);
 
-        public async Task<Category> GetCategory(string name) => await _dbset.Include(C => C.Books).FirstOrDefaultAsync(C => C.Name == name);
+        public async Task<Category> GetCategory(string name) => await _dbset.Include(C => C.Books)
+                                                                            .FirstOrDefaultAsync(C => C.Name == name);
+
     }
 }

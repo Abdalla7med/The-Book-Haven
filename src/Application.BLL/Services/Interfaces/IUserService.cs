@@ -11,6 +11,9 @@ namespace Application.BLL
         Task<IEnumerable<ReadUserDto>> GetAllUsersAsync();
         Task<ReadUserDto> GetUserByIdAsync(Guid id);
         Task<IEnumerable<ReadUserDto>> GetUsersByRoleAsync(string role);
+        Task RegisterUserAsync(CreateUserDto userCreateDto);
+        Task<bool> LoginUserAsync(string email, string password);
+        Task UpdateUserAsync(Guid userId, UpdateUserDto userUpdateDto);
         Task SoftDeleteUserAsync(Guid id);
         Task BlockUserAsync(Guid id);
     }

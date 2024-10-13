@@ -13,7 +13,9 @@ namespace Application.Shared
         public Guid BookId { get; set; }
         [Required]
         public Guid MemberId { get; set; } // GUID, will be added by default through view model ( user account ) 
+        [Required]
         public DateTime LoanDate { get; set; } = DateTime.UtcNow;
+        [Required]
         public DateTime DueDate { get; set; }  // Calculate based on borrowing duration ( default is 5 days and may be other calculations will be added on the BLL ) 
     }
 

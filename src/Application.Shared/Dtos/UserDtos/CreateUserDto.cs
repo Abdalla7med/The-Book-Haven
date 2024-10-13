@@ -7,18 +7,23 @@ using System.Threading.Tasks;
 
 namespace Application.Shared
 {
+    /// <summary>
+    ///  as Register Dto
+    /// </summary>
     public class CreateUserDto
     {
-        [Required]
-        [StringLength(25)]
+        [Required(ErrorMessage = " Please Enter First Name")]
+        [MaxLength(25, ErrorMessage = "Frist Name Must be Less Than 25 Characters")]
+        [MinLength(3, ErrorMessage = "First Name Must be Greater Than 2 Characters")]
         public string FirstName { get; set; }
 
-        [Required]
-        [StringLength(25)]
+        [Required(ErrorMessage ="Please Enter LastName")]
+        [MaxLength(25, ErrorMessage = "Last Name Must be Less Than 25 Characters")]
+        [MinLength(3, ErrorMessage = " Last Name Must be Greater Than 2 Characters")]
         public string LastName { get; set; }
 
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage ="Please Enter Email ")]
+        [EmailAddress(ErrorMessage = "Email you've provide doesn't valid")]
         public string Email { get; set; }
 
         [Required]
@@ -28,11 +33,8 @@ namespace Application.Shared
         // Roles (author, member, admin)
         [Required]
         public string Role { get; set; }
-
-        // Author-specific properties
-        public List<Guid>? AuthoredBookIds { get; set; }  // IDs of books the author has written
-
-        // Member-specific properties (loans/penalties are added later when they occur)
+        public bool IsPremium { get; set; }
+       
     }
 
 }

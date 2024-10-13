@@ -47,22 +47,37 @@ namespace Application.DAL
             return await _userManager.FindByIdAsync(id.ToString()); 
         }
 
+        public async Task<ApplicationUser> GetUserByEmailAsync(string email)
+        {
+            return await _userManager.FindByEmailAsync(email);
+        }
+
         public async Task<ApplicationUser> GetUserByNameAsync(string name)
         {
 
-            return await _dbset.FirstOrDefaultAsync(u => u.FirstName + " " + u.LastName == name);
+            return await _userManager.FindByNameAsync(name);
         }
 
         public async Task<IEnumerable<ApplicationUser>> GetUsersByRoleAsync(string role)
         {
-            return await _dbset.Where(u => u.Role == role)
-                   .ToListAsync();
+            return await _dbset.Where(u => u.Role == role).ToListAsync();
 
         }
 
-        public Task SoftDeleteUserAsync(Guid id)
+        public async Task LoadBooksAuthored(Guid userId)
         {
-            throw new NotImplementedException();
+            var user = await _context.Users
+                                     .Include(u => u.BooksAuthored)
+                                     .FirstOrDefaultAsync(u => u.Id == userId);
+        }
+
+        // Load loans and penalties for a specific user (Member role)
+        public async Task LoadLoansAndPenalties(Guid userId)
+        {
+            var user = await _context.Users
+                                     .Include(u => u.Loans)
+                                     .Include(u => u.Penalties)
+                                     .FirstOrDefaultAsync(u => u.Id == userId);
         }
     }
 }

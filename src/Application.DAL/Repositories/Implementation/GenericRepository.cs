@@ -23,7 +23,7 @@ namespace Application.DAL.Repositories
 
         public virtual async Task AddAsync(T entity) => await _dbset.AddAsync(entity);
 
-        public virtual async Task<IEnumerable<T>> GetAllAsync() => await _dbset.ToListAsync();
+        public virtual async Task<IEnumerable<T>> GetAllAsync() => await _dbset.ToListAsync(); /// nav properties null ( lazy loading)
 
         public virtual async Task<T> GetByIdAsync(Guid id) => await _dbset.FindAsync(id);
 

@@ -23,7 +23,6 @@ namespace Application.DAL.Context
         public DbSet<Loan> Loans { get; set; }
         public DbSet<Penalty> Penalties { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<Report> Reports { set; get; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,8 +11,12 @@ namespace Application.DAL.Repositories
     {
         Task<IEnumerable<ApplicationUser>> GetUsersByRoleAsync(string role);
         Task<ApplicationUser> GetUserByNameAsync(string name);
-        Task SoftDeleteUserAsync(Guid id);
+        Task<ApplicationUser> GetUserByEmailAsync(string email);
         Task BlockUserAsync(Guid id);
+        // Load Books Authored by Author
+        Task LoadBooksAuthored(Guid userId);
+        // Load loans and penalties for a specific user (Member role)
+        Task LoadLoansAndPenalties(Guid userId);
 
     }
 }
