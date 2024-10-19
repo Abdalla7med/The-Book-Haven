@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Net;
@@ -45,3 +46,5 @@ public class ExceptionHandler
         return context.Response.WriteAsJsonAsync(result);
     }
 }
+   
+    

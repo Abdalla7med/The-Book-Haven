@@ -31,8 +31,16 @@ namespace Application.Web
                 .AddEntityFrameworkStores<BookHavenContext>()
                 .AddDefaultTokenProviders();
 
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IBookService, BookService>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<ILoanService, LoanService>();
+            builder.Services.AddScoped<IPenaltyService, PenaltyService>();
+            builder.Services.AddScoped<IUserService, UserService>();
+
+
             /// Adding Authorization Policies 
-           builder.Services.AddAuthorization(
+            builder.Services.AddAuthorization(
                options =>
                            {
                                options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
@@ -42,13 +50,7 @@ namespace Application.Web
            );
 
            /// DI Registration
-           builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); 
-           builder.Services.AddScoped<IBookService, BookService>();       
-           builder.Services.AddScoped<ICategoryService, CategoryService>();
-           builder.Services.AddScoped<ILoanService, LoanService>();
-           builder.Services.AddScoped<IPenaltyService, PenaltyService>();
-           builder.Services.AddScoped<IUserService, UserService>();
-
+          
 
             var app = builder.Build();
 

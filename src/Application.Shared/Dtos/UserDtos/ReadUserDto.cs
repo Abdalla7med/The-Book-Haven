@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,9 @@ namespace Application.Shared
         public List<ReadLoanDto>? Loans { get; set; }  // Loans this member has made
         public List<ReadPenaltyDto>? Penalties { get; set; }  // Penalties for this member
         public bool IsBlocked { get; set; } // Whether the user is blocked (applies to members)
+       
+        [DataType(DataType.ImageUrl)]
+        [RegularExpression(@"\w+\.(jpg|png)", ErrorMessage = "The image URL must be a valid .png or .jpg file")]
+        public string ImageUrl {set; get;}
     }
-
 }

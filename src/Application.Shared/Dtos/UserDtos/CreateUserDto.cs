@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Application.Shared
 {
     /// <summary>
-    ///  as Register Dto
+    ///  as Register Dto, with Server Side Dtos
     /// </summary>
     public class CreateUserDto
     {
@@ -17,10 +17,14 @@ namespace Application.Shared
         [MinLength(3, ErrorMessage = "First Name Must be Greater Than 2 Characters")]
         public string FirstName { get; set; }
 
+
+
         [Required(ErrorMessage ="Please Enter LastName")]
         [MaxLength(25, ErrorMessage = "Last Name Must be Less Than 25 Characters")]
         [MinLength(3, ErrorMessage = " Last Name Must be Greater Than 2 Characters")]
         public string LastName { get; set; }
+
+
 
         [Required(ErrorMessage ="Please Enter Email ")]
         [EmailAddress(ErrorMessage = "Email you've provide doesn't valid")]
@@ -32,9 +36,15 @@ namespace Application.Shared
 
         // Roles (author, member, admin)
         [Required]
+        [RegularExpression("Admin|Member|Author", ErrorMessage = "Role must be either 'Admin', 'Member', or 'Author'.")]
         public string Role { get; set; }
+
         public bool IsPremium { get; set; }
-       
+
+        [RegularExpression(@"(.*\.(jpg|png)$)", ErrorMessage = "Please provide a valid image URL ending with .jpg or .png.")]
+        public string ImageURL { get; set; } // Image file must be a valid URL, .jpg or .png only.
+
+
     }
 
 }

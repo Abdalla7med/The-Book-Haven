@@ -1,1 +1,19 @@
 ﻿
+@{
+    ViewData["Title"] = "Home";
+}
+
+<h2>Welcome to the Application</h2>
+
+@if (!User.Identity.IsAuthenticated)
+{
+    <div>
+        <a href="@Url.Action("Login", "Account")" class="btn btn-primary">Login</a>
+        <a href="@Url.Action("Register", "Account")" class="btn btn-secondary">Register</a>
+    </div>
+}
+else
+{
+    <p>Welcome, @User.Identity.Name!</p>
+    <a href="@Url.Action("Dashboard", "Home")" class="btn btn-success">Go to Dashboard</a>
+}

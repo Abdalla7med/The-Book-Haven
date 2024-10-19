@@ -7,7 +7,11 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Application.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <!-- Allow views to inject additional styles in-case of custom style -->
+    @RenderSection("Styles", required: false) 
 </head>
+
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -40,6 +44,7 @@
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -51,9 +56,12 @@
             &copy; 2024 - Application.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <!-- allow Inject -->
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

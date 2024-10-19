@@ -1,0 +1,28 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<Application.Shared.ReadBookDto>;
+
+@{
+    ViewData["Title"] = "Books";
+}
+
+<div class="container">
+    <h2 class="mt-4">Available Books</h2>
+    <div class="row">
+        @foreach (var book in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="@Url.Content("~/images/books/" + book.CoverUrl)" class="card-img-top" alt="@book.Title" />
+                    <div class="card-body">
+                        <h5 class="card-title">@book.Title</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@book.AuthorNames</h6>
+                        <p class="card-text">Published: @book.PublicationYear</p>
+                       <!-- <a href="//Url.Action("Details", "Books", new { id = book.Bookid   })" class="btn btn-primary">View Details</a> -->
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div> 

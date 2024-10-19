@@ -9,6 +9,11 @@ namespace Application.Shared
 {
     public class UpdateUserDto
     {
+
+        [Required]
+        public Guid Id { get; set; } // User's unique identifier
+
+        /// Not Required, incase of no need to update them 
         [StringLength(25)]
         public string FirstName { get; set; }
 
@@ -16,25 +21,16 @@ namespace Application.Shared
         public string LastName { get; set; }
 
         [EmailAddress]
-        public string Email { set; get; }
+        public string Email { get; set; }
 
-        // Roles (can modify roles if necessary)
-        public string Roles { get; set; }
+        [RegularExpression(@"(.*\.(jpg|png)$)", ErrorMessage = "Please provide a valid image URL ending with .jpg or .png.")]
+        public string ImageURL { get; set; } // Image file must be a valid URL, .jpg or .png only.
 
-        // Block/unblock user (for admin use)
-        public bool IsBlocked { get; set; }
+        public bool IsPremium { get; set; } // Can be updated based on certain conditions
 
-        // Delete/unDelete user (for admin use)
-        public bool IsDeleted { get; set; }
+        public bool IsDeleted { get; set; } // Soft delete property
 
-        // Optional: Update books for authors
-        public List<Guid>? AuthoredBookIds { get; set; }
-
-        // Optional: Update loans for members
-        public List<Guid>? LoanIds { get; set; }
-
-        // Optional: Update penalties for members
-        public List<Guid>? PenaltyIds { get; set; }
+        public bool IsBlocked { get; set; } // Block property to disable user access
     }
 
 }
