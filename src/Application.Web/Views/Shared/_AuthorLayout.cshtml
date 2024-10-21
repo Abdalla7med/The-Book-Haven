@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"] - Author Dashboard</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="@Url.Action("AuthoredBooks", "Author")">Authored Books</a></li>
+                <li><a href="@Url.Action("Publish", "Author")">Publish Book</a></li>
+                <li><a href="@Url.Action("EditProfile", "Account")">Edit Profile</a></li>
+                <li><a href="@Url.Action("Logout", "Account")">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <footer>
+        <p>© 2024 - Author Footer</p>
+    </footer>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

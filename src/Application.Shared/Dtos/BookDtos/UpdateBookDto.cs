@@ -13,7 +13,7 @@ namespace Application.Shared
         public Guid BookId { get; set; }
 
         [DataType(DataType.ImageUrl)]
-        public string CoverUrl { get; set; }
+        public string? CoverUrl { get; set; }
 
         public int AvailableCopies { get; set; }
 

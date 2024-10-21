@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"] - Admin Dashboard</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="@Url.Action("Index", "Book")">All Books</a></li>
+                <li><a href="@Url.Action("Index", "Member")">All Members</a></li>
+                <li><a href="@Url.Action("Index", "Loan")">All Loans</a></li>
+                <li><a href="@Url.Action("Index", "Penalty")">All Penalties</a></li>
+                <li><a href="@Url.Action("CreateUser","Admin")">Add Account</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <footer>
+        <p>© 2024 - Admin Footer</p>
+    </footer>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

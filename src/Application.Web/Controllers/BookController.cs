@@ -1,6 +1,7 @@
 ﻿using Application.BLL;
 using Microsoft.AspNetCore.Mvc;
 using Application.Shared;
+using Microsoft.AspNetCore.Authorization;
 namespace Application.Web.Controllers
 {
     public class BookController : Controller
@@ -18,7 +19,7 @@ namespace Application.Web.Controllers
         {
             IEnumerable<ReadBookDto> Books = await _bookService.AllBooks();
             /// sending books to view 
-            return View(Books);
+            return View("BookIndex", Books);
         }
 
         [HttpGet]
@@ -105,6 +106,16 @@ namespace Application.Web.Controllers
                 return NotFound();
 
             return View(book);
+        }
+
+        // POST: Book/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            await _bookService.DeleteBook(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

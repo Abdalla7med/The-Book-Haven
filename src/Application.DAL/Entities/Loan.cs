@@ -11,15 +11,18 @@ namespace Application.DAL
     {
         public Guid LoanId { get; set; } = Guid.NewGuid();
 
-        public DateTime LoanDate { get; set; }
-        public DateTime DueDate { get; set; }
+        public DateTime LoanDate { get; set; } = DateTime.UtcNow;
+        /// <summary>
+        /// 7 days is te maximum number of days the book can be in loan 
+        /// </summary>
+        public DateTime DueDate { get; set; } = DateTime.UtcNow.AddDays(7);
         public DateTime? ReturnDate { get; set; }
-        public bool IsReturned { get; set; }
+        public bool IsReturned { get; set; } = false;
         public bool IsDeleted { set; get; } = false;
 
         /// relations
         public Guid? BookId { get; set; }
-        public Book Book { get; set; }
+        public Book? Book { get; set; }
         /// <summary>
         /// <summary>
         ///  IdentityUser Id is a GUID ( string ) 

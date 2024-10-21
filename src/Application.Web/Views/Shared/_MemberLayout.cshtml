@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"] - Member Dashboard</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="@Url.Action("AllBooks", "Books")">All Books</a></li>
+                <li><a href="@Url.Action("MyLoans", "Member")">My Loans</a></li>
+                <li><a href="@Url.Action("MyPenalties", "Member")">My Penalties</a></li>
+                <li><a href="@Url.Action("ReturnedBooks", "Member")">Returned Books</a></li>
+                <li><a href="@Url.Action("EditProfile", "Account")">Edit Profile</a></li>
+                <li><a href="@Url.Action("Logout", "Account")">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <footer>
+        <p>© 2024 - Member Footer</p>
+    </footer>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

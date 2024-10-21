@@ -14,7 +14,7 @@ namespace Application.DAL
         public Guid PenaltyId { get; set; } = Guid.NewGuid();
         
         [Precision(3,3), DataType(DataType.Currency)]
-        public decimal Amount { get; set; }
+        public decimal? Amount { get; set; }
         public bool IsPaid { set; get; } = false;
         public bool IsDeleted { set; get; } = false;
         // Relations

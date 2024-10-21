@@ -31,7 +31,7 @@ namespace Application.Shared
         public Guid CategoryId { get; set; }  // Select category
 
         [Required]
-        public List<string> AuthorNames { get; set; }  // Add author names manually
+        public string? AuthorName { get; set; }  // Add author names manually
     }
 
 }

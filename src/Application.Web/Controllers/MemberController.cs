@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Application.Web.Controllers
 {
+    [Authorize(Roles = "Member" )]
     public class MemberController : Controller
     {
         /// <summary>

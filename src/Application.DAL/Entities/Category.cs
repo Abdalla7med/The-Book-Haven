@@ -13,7 +13,7 @@ namespace Application.DAL
         public Guid CategoryId { get; set; } = Guid.NewGuid();
 
         [StringLength(25)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public bool IsDeleted { set; get; } = false;
         // relations
         public ICollection<Book>? Books { get; set; }

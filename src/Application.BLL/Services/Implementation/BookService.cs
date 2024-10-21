@@ -43,19 +43,15 @@ namespace Application.BLL
             }
 
             // Get authors by searching their names
-            List<ApplicationUser> authors = new List<ApplicationUser>();
-            foreach (var authorName in createBookDto.AuthorNames)
+           
+            var author = await _unitOfWork.UserRepository.GetUserByNameAsync(createBookDto.AuthorName);
+
+            // Author existence validation
+            if (author == null)
             {
-                var author = await _unitOfWork.UserRepository.GetUserByNameAsync(authorName);
-
-                // Author existence validation
-                if (author == null)
-                {
-                    throw new ArgumentException($"Author '{authorName}' Doesn't Exist");
-                }
-
-                authors.Add(author);
+                throw new ArgumentException($"Author '{createBookDto.AuthorName}' Doesn't Exist");
             }
+
 
             // Publication year validation
             if (createBookDto.PublicationYear > DateTime.UtcNow.Year)
@@ -73,7 +69,7 @@ namespace Application.BLL
                 CategoryId = category.CategoryId,
                 Loans = new List<Loan>(),
                 AvailableCopies = createBookDto.AvailableCopies,
-                Authors = authors,
+                Author = author,
                 PublicationYear = createBookDto.PublicationYear
             };
 
@@ -129,6 +125,16 @@ namespace Application.BLL
 
             // Using AutoMapper to map to ReadBookDto
             return _mapper.Map<ReadBookDto>(book);
+        }
+
+        public async Task<IEnumerable<ReadBookDto>> GetBooksByAuthor(Guid authorId)
+        {
+            var books = await _unitOfWork.BookRepository.GetAllAsync();
+
+            var AuthoredBooks = books.Where(b => b.AuthorId == authorId).ToList();
+
+            return _mapper.Map<IEnumerable<ReadBookDto>>(AuthoredBooks);
+
         }
 
         /// <summary>

@@ -26,19 +26,49 @@ namespace Application.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(CreateUserDto model)
+        public async Task<IActionResult> Register(CreateUserDto model, IFormFile Image)
         {
             if (ModelState.IsValid)
             {
+                // Check if the image was uploaded
+                if (Image != null && Image.Length > 0)
+                {
+                    // Get the root path of the wwwroot folder
+                    var wwwRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+
+                    // Create a unique file name for the uploaded image
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Image.FileName);
+
+                    // Define the path to save the image
+                    var filePath = Path.Combine(wwwRootPath, "uploads", "images", fileName);
+
+                    // Ensure the directory exists
+                    Directory.CreateDirectory(Path.Combine(wwwRootPath, "uploads", "images"));
+
+                    // Save the image to wwwroot/uploads/images folder
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await Image.CopyToAsync(stream);
+                    }
+
+                    // Set the ImageURL in the model
+                    model.ImageURL = "/uploads/images/" + fileName;  // Relative path
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Please upload an image.");
+                    return View(model);
+                }
+                // Register the user via the user service
                 var result = await _userService.RegisterUserAsync(model);
 
                 if (result.Succeeded)
                 {
-                    // Sign-in the user automatically after registration (optional)
-                    // await _signInManager.SignInAsync(result.User, isPersistent: false);
+                    // Redirect to home after successful registration
                     return RedirectToAction("Index", "Home");
                 }
 
+                // Handle registration errors
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error);
@@ -47,6 +77,7 @@ namespace Application.Web.Controllers
 
             return View(model);
         }
+
 
 
 
@@ -81,7 +112,7 @@ namespace Application.Web.Controllers
 
 
 
-        // POST: User/Logout
+        // POST: Account/Logout
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
@@ -170,19 +201,6 @@ namespace Application.Web.Controllers
             }
 
             return RedirectToAction("Index", "Home");
-        }
-
-        // GET: User/Details
-        public async Task<IActionResult> Details(Guid id)
-        {
-            var user = await _userService.GetUserByIdAsync(id);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
         }
     }
 }

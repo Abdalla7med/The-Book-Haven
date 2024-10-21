@@ -34,15 +34,21 @@ namespace Application.Web.Controllers
             return View();
         }
 
-        // GET: Home/Dashboard
         [Authorize]
         public async Task<IActionResult> Dashboard()
         {
+            /// User : from Controller base
             var user = await _userManager.GetUserAsync(User);
 
             if (user != null)
             {
                 var roles = await _userManager.GetRolesAsync(user);
+
+                if (roles.Count == 0)
+                {
+                    // User is authenticated but does not have any roles assigned
+                    return View("NoRoleError"); // or redirect to an error page or message
+                }
 
                 if (roles.Contains("Admin"))
                 {
@@ -60,6 +66,7 @@ namespace Application.Web.Controllers
 
             return Unauthorized();
         }
+
 
 
         public IActionResult Privacy()

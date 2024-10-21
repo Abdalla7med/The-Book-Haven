@@ -12,6 +12,7 @@ public class UserService : IUserService
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
+    /// Must Register this with 
     private readonly RoleManager<IdentityRole<Guid>> _roleManager;
     private readonly string facultyDomain = ".edu.eg"; // Example faculty domain
 
@@ -30,27 +31,50 @@ public class UserService : IUserService
         // Check if the email belongs to the faculty domain
         bool isFacultyEmail = userCreateDto.Email.EndsWith(facultyDomain, StringComparison.OrdinalIgnoreCase);
 
+        // Validate the required fields
+        if (string.IsNullOrWhiteSpace(userCreateDto.FirstName) || string.IsNullOrWhiteSpace(userCreateDto.LastName))
+        {
+            throw new ArgumentException("FirstName and LastName are required.");
+        }
+
         // Map DTO to ApplicationUser
-        var newUser = _mapper.Map<ApplicationUser>(userCreateDto);
+        var newUser = new ApplicationUser()
+        {
+            FirstName = userCreateDto.FirstName,
+            LastName = userCreateDto.LastName,
+            Email = userCreateDto.Email,
+            UserName = $"{userCreateDto.FirstName.Trim()}{userCreateDto.LastName.Trim()}",
+            ImageUrl = userCreateDto.ImageURL, // This can be null or empty
+            IsPremium = userCreateDto.IsPremium,
+            Role = "Admin"
+        };
+
         newUser.IsPremium = isFacultyEmail; // Set IsPremium based on email domain
 
-        // Create the user in Identity
+        // Create the user in Identity.
         IdentityResult result = await _userManager.CreateAsync(newUser, userCreateDto.Password);
 
         if (!result.Succeeded)
         {
+            // Instead of throwing, you could log the error or return it as part of the result
             throw new Exception("User registration failed: " + string.Join(", ", result.Errors.Select(e => e.Description)));
         }
 
         // Assign the user role
         if (!string.IsNullOrEmpty(userCreateDto.Role))
         {
+            if (!await _roleManager.RoleExistsAsync(userCreateDto.Role))
+            {
+                throw new ArgumentException($"Role '{userCreateDto.Role}' does not exist.");
+            }
             await _userManager.AddToRoleAsync(newUser, userCreateDto.Role);
         }
 
         await _unitOfWork.CompleteAsync();
+
         return new ApplicationResult(result);
     }
+
 
     // Login User
     public async Task<ApplicationResult> LoginUserAsync(string email, string password)

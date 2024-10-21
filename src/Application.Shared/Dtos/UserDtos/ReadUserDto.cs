@@ -27,7 +27,7 @@ namespace Application.Shared
         public bool IsBlocked { get; set; } // Whether the user is blocked (applies to members)
        
         [DataType(DataType.ImageUrl)]
-        [RegularExpression(@"\w+\.(jpg|png)", ErrorMessage = "The image URL must be a valid .png or .jpg file")]
+        [RegularExpression(@"\w+\.(jpg|png|jpeg)", ErrorMessage = "The image URL must be a valid .png or .jpg file")]
         public string ImageUrl {set; get;}
     }
 }

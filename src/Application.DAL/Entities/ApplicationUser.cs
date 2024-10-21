@@ -28,14 +28,15 @@ namespace Application.DAL
         /// Soft Delete Properties 
         public bool IsDeleted { set; get; } = false;
         public bool IsBlocked { set; get; } = false; /// till  now we'll use it as a blocking property instead of LockoutEnd 
-        
+
         [Required]
-        public string Role { set; get; }
+        /// Default Role is member 
+        public string Role { set; get; } = "Member";
         public bool IsPremium { get; set; } = false;
 
         [DataType(DataType.ImageUrl)]
         [RegularExpression(@"\w+\.(jpg|png)", ErrorMessage = "The image URL must be a valid .png or .jpg file")]
-        public string ImageUrl { set; get; }
+        public string? ImageUrl { set; get; }
         // Navigation property: List of books authored by this user (only applicable if the user is an "Author")
         public ICollection<Book>? BooksAuthored { get; set; }
 
