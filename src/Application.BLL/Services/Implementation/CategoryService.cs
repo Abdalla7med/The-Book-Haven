@@ -19,7 +19,8 @@ namespace Application.BLL
 
         public async Task<IEnumerable<ReadCategoryDto>> AllCategories()
         {
-            var categories = await _unitOfWork.CategoryRepository.GetAllAsync();
+            var categories = await _unitOfWork.CategoryRepository.GetAllAsync();]
+            
             return _mapper.Map<IEnumerable<ReadCategoryDto>>(categories);
         }
 

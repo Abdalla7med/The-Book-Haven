@@ -160,7 +160,7 @@ namespace Application.Web.Controllers
             };
 
             // Return the EditProfile view with the model
-            return View(model);
+            return View("Edit",model);
         }
 
 
@@ -181,7 +181,7 @@ namespace Application.Web.Controllers
                 ModelState.AddModelError(string.Empty, "Failed to update profile.");
             }
 
-            return View(model);
+            return View("Edit",model);
         }
 
         // POST: User/Delete
