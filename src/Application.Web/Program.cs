@@ -54,6 +54,9 @@ namespace Application.Web
 
             var app = builder.Build();
 
+            var mapper = app.Services.GetRequiredService<IMapper>();
+            mapper.ConfigurationProvider.AssertConfigurationIsValid();
+
             // middleware registrations...
             // adding it as first middleware to handle all exceptions 
 

@@ -8,6 +8,7 @@ namespace Application.Shared
 {
     public class ReadBookDto
     {
+        public Guid Id { set; get; }
         public string? Title { get; set; }
         public string? CoverUrl { get; set; }
         public string? ISBN { get; set; }

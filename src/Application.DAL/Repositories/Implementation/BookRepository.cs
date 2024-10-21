@@ -28,7 +28,7 @@ namespace Application.DAL.Repositories
         public override async Task<Book> GetByIdAsync(Guid id)
         {
             return await _dbset.Include(b => b.Loans) 
-                               .Include(b => b.Authors)
+                               .Include(b => b.Author)
                                .FirstOrDefaultAsync(b => b.BookId == id);
         }
     }

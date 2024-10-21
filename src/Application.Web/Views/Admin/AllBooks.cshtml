@@ -1,0 +1,36 @@
+﻿
+@model IEnumerable<Application.Shared.ReadBookDto>
+@{
+    ViewData["Title"] = "Manage Books";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Published Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td><img src="~/uploads/images/@book.CoverUrl" alt="@book.Title" /></td>
+                <td>@book.Title</td>
+                <td>@book.AuthorName</td>
+                <td>@book.PublicationYear.ToString()</td>
+                <td>@book.AvailableCopies.ToString()</td>
+                <td>
+                    <a href="@Url.Action("EditBook", "Admin", new { id = book.Id })" class="btn btn-warning">Edit</a>
+                    <form asp-action="DeleteBook" asp-route-id="@book.Id" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+    </table>

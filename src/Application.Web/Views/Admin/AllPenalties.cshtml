@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Application.Shared.ReadPenaltyDto> // Adjust the namespace accordingly
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "All Penalties";
+}
+<h2>All Penalties</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Penalty ID</th>
+            <th>Amount</th>
+            <th>Is Paid</th>
+            <th>Loan ID</th>
+            <th>Member Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var penalty in Model)
+            {
+                <tr>
+                    <td>@penalty.PenaltyId</td>
+                    <td>@penalty.Amount.ToString("C")</td>
+                    <td>@(penalty.IsPaid ? "Yes" : "No")</td>
+                    <td>@penalty.LoanId</td>
+                    <td>@penalty.MemberName</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5">No penalties found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Dashboard" class="btn btn-primary">Back to Dashboard</a> <!-- Adjust link as needed -->
+</div>

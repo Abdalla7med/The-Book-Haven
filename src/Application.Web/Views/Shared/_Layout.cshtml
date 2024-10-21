@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"] - LMS - The Book Haven </title>
+    <title>@ViewData["Title"] - LMS - The Book Haven</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-
-    @RenderSection("Styles", required: false) <!-- Optional section for page-specific CSS -->
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="@Url.Action("Index", "Home")">LMS - The Book Haven</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -20,6 +18,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="@Url.Action("Index", "Home")">Home</a>
                 </li>
+
                 <!-- Conditional Navigation based on Roles -->
                 @if (User.IsInRole("Admin"))
                 {
@@ -46,8 +45,11 @@
                         <a class="nav-link" href="@Url.Action("EditProfile", "Account")">Edit Profile</a>
                     </li>
 
-                    <li class = "nav-item">
-                        <a action="nav-link" href ="@Url.Action("Logout", "Account")">Logout</a>
+                    <li class="nav-item">
+                        <form id="logoutForm" action="@Url.Action("Logout", "Account")" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-link nav-link text-light">Logout</button>
+                        </form>
                     </li>
                 }
                 else
@@ -64,17 +66,13 @@
         </div>
     </nav>
 
-    <div class="container">
-        <!-- Main content of the page -->
+    <div class="container mt-4">
         @RenderBody()
-
-       @*   <!-- Render optional sections (e.g., custom scripts) -->
-         @RenderSection("Scripts", required: false) *@
     </div>
 
-    <footer class="footer">
-        <div class="container">
-            <p class="text-muted">&copy; @DateTime.Now.Year - Your Application</p>
+    <footer class="footer mt-5">
+        <div class="container text-center">
+            <p class="text-muted">&copy; @DateTime.Now.Year - LMS - The Book Haven</p>
         </div>
     </footer>
 

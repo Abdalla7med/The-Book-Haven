@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Application.Shared.ReadLoanDto> // Adjust the namespace accordingly
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "All Loans";
+}
+<h2> All Loans </h2>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Loan ID</th>
+                <th>Loan Date</th>
+                <th>Due Date</th>
+                <th>Return Date</th>
+                <th>Is Returned</th>
+                <th>Book Title</th>
+                <th>Member Name</th>
+                <th>Penalty</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var loan in Model)
+            {
+                <tr>
+                    <td>@loan?.LoanDate.ToShortDateString()</td>
+                    <td>@loan?.DueDate.ToShortDateString()</td>
+                    <td>@(loan?.ReturnDate?.ToShortDateString() ?? "Not Returned")</td>
+                    <td>@loan?.IsReturned</td>
+                    <td>@loan?.BookTitle</td>
+                    <td>@loan?.MemberName</td>
+                    <td>
+                        @if (loan?.Penalty != null)
+                        {
+                            <span>Penalty Amount: @loan?.Penalty.Amount</span> <!-- Adjust based on your penalty properties -->
+                        }
+                        else
+                        {
+                            <span>No Penalty</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="EditLoan" asp-route-id="@loan?.LoanId" class="btn btn-warning">Edit</a>
+                        <form asp-action="DeleteLoan" asp-route-id="@loan?.LoanId" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No loans available.</p>
+}
+
+<div>
+    <a asp-action="CreateLoan" class="btn btn-primary">Create New Loan</a>
+</div>

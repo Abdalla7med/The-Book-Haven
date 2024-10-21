@@ -155,13 +155,51 @@ public class UserService : IUserService
             throw new KeyNotFoundException("User not found or deleted.");
         }
 
-        return _mapper.Map<ReadUserDto>(user);
+        var Dto = new ReadUserDto()
+        {
+            UserId = user.Id,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email,
+            Role = user.Role,
+            IsBlocked = user.IsBlocked,
+            ImageUrl = user.ImageUrl,
+            IsDeleted = user.IsDeleted,
+            IsPremium = user.IsPremium
+        };
+        return Dto;
     }
 
     public async Task<IEnumerable<ReadUserDto>> GetAllUsersAsync()
     {
         var users = await _unitOfWork.UserRepository.GetAllAsync();
-        return _mapper.Map<IEnumerable<ReadUserDto>>(users);
+
+        // Check if users is null or empty
+        if (users == null || !users.Any())
+        {
+            return new List<ReadUserDto>(); // Return an empty list if no users found
+        }
+        /// Mapp manually 
+        List<ReadUserDto> UserDtos = new List<ReadUserDto>();
+        foreach(var user in  users)
+        {
+            var Dto = new ReadUserDto()
+            {
+                UserId = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email, 
+                Role = user.Role,
+                IsBlocked= user.IsBlocked,
+                ImageUrl= user.ImageUrl,
+                IsDeleted = user.IsDeleted,
+                IsPremium = user.IsPremium
+            };
+            UserDtos.Add(Dto);
+
+        }
+
+        return UserDtos;
     }
 
     public async Task<IEnumerable<ReadUserDto>> GetUsersByRoleAsync(string role)

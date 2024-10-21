@@ -33,9 +33,8 @@ namespace Application.DAL.Context
 
             /// Book - ApplicationUser(Author)	WrittenBy ( many-to-many )	A book can be written by one or more authors.
             modelBuilder.Entity<Book>()
-            .HasMany(b => b.Authors) // Assuming Authors is a navigation property
-            .WithMany(a => a.BooksAuthored)
-            .UsingEntity(j => j.ToTable("BookAuthors")); // Branch table
+            .HasOne(b => b.Author) // Assuming Authors is a navigation property
+            .WithMany(a => a.BooksAuthored);
 
 
             /// Book - Category relationship (Many-to-One) BelongsTo relation

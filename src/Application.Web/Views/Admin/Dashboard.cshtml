@@ -3,6 +3,52 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "LMS - Admin Dashboard";
 }
-
-<h2>Admin Dashboard</h2>
 <p>Welcome, @User?.Identity?.Name!</p>
+
+<!-- A set of Cards to manage entities in The System by admin-->
+
+<div class="row">
+    <!-- Books -->
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Manage Books</h5>
+                <p class="card-text">View, edit, and delete books in the system.</p>
+                <a href="@Url.Action("AllBooks", "Admin")" class="btn btn-primary">Manage Books</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Members -->
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Manage Members</h5>
+                <p class="card-text">View, edit, and manage member profiles.</p>
+                <a href="@Url.Action("AllMembers", "Admin")" class="btn btn-primary">Manage Members</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loans -->
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Manage Loans</h5>
+                <p class="card-text">View, edit, and manage loans in the system.</p>
+                <a href="@Url.Action("AllLoans", "Admin")" class="btn btn-primary">Manage Loans</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Penalties -->
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Manage Penalties</h5>
+                <p class="card-text">View, edit, and manage penalties incurred by members.</p>
+                <a href="@Url.Action("AllPenalties", "Admin")" class="btn btn-primary">Manage Penalties</a>
+            </div>
+        </div>
+    </div>
+</div>

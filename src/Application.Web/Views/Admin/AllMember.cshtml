@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Application.Shared.ReadUserDto> // Adjust the namespace accordingly
+
+<h2>All Members</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>User ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Blocked</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var member in Model)
+            {
+                <tr>
+                    <td>@member.UserId</td>
+                    <td>@member.FirstName @member.LastName</td>
+                    <td>@member.Email</td>
+                    <td>@member.Role</td>
+                    <td>@(member.IsBlocked ? "Yes" : "No")</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(member.ImageUrl))
+                        {
+                            <img src="@member.ImageUrl" alt="User Image" style="width:50px; height:50px;" />
+                        }
+                    </td>
+                    <td>
+                        <a href="@Url.Action("EditUser", "Admin", new { id = member.UserId })" class="btn btn-warning">Edit</a>
+                        <form asp-action="DeleteUser" asp-route-id="@member.UserId" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="7">No members found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="CreateUser" class="btn btn-primary">Add New Member</a> <!-- Adjust link as needed -->
+</div>

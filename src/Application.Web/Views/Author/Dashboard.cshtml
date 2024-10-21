@@ -4,5 +4,18 @@
     Layout = "~/Views/Shared/_AuthorLayout.cshtml";
 }
 
-<h2>Author Dashboard</h2>
 <p>Welcome, @User?.Identity?.Name!</p>
+
+    <div class="row">
+        <!-- Books -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Manage Your Books</h5>
+                    <h6 class="card-subtitle">@ViewBag.WrittenBooks</h6>
+                    <p class="card-text">View, edit, and delete books in the system.</p>
+                    <a href="@Url.Action("AuthoredBooks", "Author")" class="btn btn-primary">Manage Your Books</a>
+                </div>
+            </div>
+        </div>
+    </div>

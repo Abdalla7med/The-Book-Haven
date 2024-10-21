@@ -20,3 +20,36 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* site.css */
+.navbar, .footer {
+    background-color: #343a40; /* Dark gray background */
+    color: #ffffff; /* White text */
+}
+
+.nav-link, .btn-link {
+    color: #ffffff !important; /* White links */
+}
+
+    .nav-link:hover, .btn-link:hover {
+        color: #f8f9fa !important; /* Slightly lighter on hover */
+    }
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    display: inline-block;
+    margin-right: 15px;
+}
+
+.footer {
+    text-align: center;
+    padding: 15px 0;
+}
+
+.container {
+    margin-top: 20px;
+}

@@ -1,0 +1,54 @@
+﻿@model Application.Shared.CreateBookDto;
+
+@{
+    Layout = "~/Views/Shared/_AuthorLayout.cshtml";
+    ViewData["Title"] = "Publish Book";
+}
+
+<h2>Publish Book</h2>
+
+<form asp-action="PublishBook" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    
+    <div class="form-group">
+        <label asp-for="ISBN"></label>
+        <input asp-for="ISBN" class="form-control" />
+        <span asp-validation-for="ISBN" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PublicationYear"></label>
+        <input asp-for="PublicationYear" type="number" class="form-control" />
+        <span asp-validation-for="PublicationYear" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="AvailableCopies"></label>
+        <input asp-for="AvailableCopies" type="number" class="form-control" />
+        <span asp-validation-for="AvailableCopies" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CategoryId">Select Category</label>
+        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories"></select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CoverUrl">Cover Image (jpg/png)</label>
+        <input type="file" name="coverImage" class="form-control" />
+        <span asp-validation-for="CoverUrl" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Publish Book</button>
+</form>
+
+<div>
+    <a asp-action="Dashboard" class="btn btn-secondary">Back to Dashboard</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

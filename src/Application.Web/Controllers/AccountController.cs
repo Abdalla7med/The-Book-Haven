@@ -118,11 +118,8 @@ namespace Application.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             await _userService.SignOutAsync();
-            return RedirectToAction("Login", "User");
+            return RedirectToAction("Index", "Home");
         }
-
-
-
 
         // GET: User/EditProfile
         [HttpGet]
@@ -190,6 +187,7 @@ namespace Application.Web.Controllers
         // POST: User/Delete
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _userService.DeleteUserAsync(id);

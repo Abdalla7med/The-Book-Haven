@@ -1,12 +1,12 @@
 ﻿@model Application.Shared.CreateUserDto
 
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Ceate User";
 }
 
-<h2> Register </h2>
+<h2> Create User </h2>
 
-<form asp-action="Register" enctype="multipart/form-data" method="post">
+<form asp-action="CreateUser" enctype="multipart/form-data" method="post">
     <div class="form-group">
         <label asp-for="FirstName"></label>
         <input asp-for="FirstName" class="form-control" value="@Model?.FirstName" />
@@ -41,6 +41,7 @@
     <div class="form-group">
         <label for="Role">Select Role</label>
         <select asp-for="Role" class="form-control">
+            <option value="Admin">Admin</option>
             <option value="Author">Author</option>
             <option value="Member">Member</option>
         </select>

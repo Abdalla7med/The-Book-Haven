@@ -29,6 +29,7 @@ namespace Application.BLL
         public async Task<IEnumerable<ReadLoanDto>> AllLoans()
         {
             var loans = await _unitOfWork.LoanRepository.GetAllAsync();
+
             return _mapper.Map<IEnumerable<ReadLoanDto>>(loans);
         }
 

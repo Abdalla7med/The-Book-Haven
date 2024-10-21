@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Application.DAL;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -17,15 +18,10 @@ namespace Application.Shared
 
         // Roles
         public string Role { set; get; }
-
-        // Author-specific properties
-        public List<ReadBookDto>? BooksAuthored { get; set; }  // Books authored by this user
-
-        // Member-specific properties
-        public List<ReadLoanDto>? Loans { get; set; }  // Loans this member has made
-        public List<ReadPenaltyDto>? Penalties { get; set; }  // Penalties for this member
         public bool IsBlocked { get; set; } // Whether the user is blocked (applies to members)
-       
+        public bool IsDeleted { get; set; }
+        public bool IsPremium { set; get; }
+
         [DataType(DataType.ImageUrl)]
         [RegularExpression(@"\w+\.(jpg|png|jpeg)", ErrorMessage = "The image URL must be a valid .png or .jpg file")]
         public string ImageUrl {set; get;}

@@ -1,25 +1,29 @@
 ﻿using Application.BLL;
 using Application.Shared;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Application.Web.Controllers
 {
-    [Authorize(Roles="Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly IUserService _userService;
         private readonly IBookService _bookService;
         private readonly ILoanService _loanService;
         private readonly IPenaltyService _penaltyService;
-        public AdminController(IUserService userService, IBookService bookService, ILoanService loanService, IPenaltyService penaltyService)
+        private readonly IMapper _mapper;
+        public AdminController(IUserService userService, IBookService bookService, ILoanService loanService, IPenaltyService penaltyService, IMapper mapper
+            )
         {
             _userService = userService;
             _bookService = bookService;
             _loanService = loanService;
             _penaltyService = penaltyService;
+            _mapper = mapper;
         }
-    
+
         /// <summary>
         ///  Admin customized Dashboard
         /// </summary>
@@ -28,7 +32,6 @@ namespace Application.Web.Controllers
         {
             return View();
         }
-
 
         public async Task<IActionResult> AllBooks()
         {
@@ -41,9 +44,9 @@ namespace Application.Web.Controllers
 
         public async Task<IActionResult> AllMembers()
         {
-            var Members = await _userService.GetAllUsersAsync();
-
-            return View(Members);
+            var users = await _userService.GetAllUsersAsync(); // Assuming this returns IEnumerable<ApplicationUser>
+            var userDtos = _mapper.Map<IEnumerable<ReadUserDto>>(users);
+            return View(userDtos);
         }
 
         public async Task<IActionResult> AllLoans()
@@ -52,7 +55,7 @@ namespace Application.Web.Controllers
 
             return View(loans);
         }
-        
+
         public async Task<IActionResult> AllPenalties()
         {
             var penalties = await _penaltyService.AllPenalties();
@@ -62,8 +65,8 @@ namespace Application.Web.Controllers
 
         [HttpGet]
         public IActionResult CreateUser()
-        { 
-            return View(); 
+        {
+            return View();
         }
 
         [HttpPost]
@@ -106,7 +109,7 @@ namespace Application.Web.Controllers
                 if (result.Succeeded)
                 {
                     // Redirect to home after successful registration
-                    return RedirectToAction("Index", "Admin");
+                    return RedirectToAction("Dashboard", "Admin");
                 }
 
                 // Handle registration errors
@@ -118,5 +121,145 @@ namespace Application.Web.Controllers
 
             return View(model);
         }
+
+        // GET: Admin/EditBook/{id}
+        public async Task<IActionResult> EditBook(Guid id)
+        {
+            var book = await _bookService.GetBookById(id); // Fetch the book details using the service
+            if (book == null)
+            {
+                return NotFound(); // Return 404 if the book does not exist
+            }
+
+            // Map the book entity to the UpdateBookDto
+            var updateBookDto = new UpdateBookDto
+            {
+                BookId = book.Id,
+                CoverUrl = book.CoverUrl,
+                AvailableCopies = book.AvailableCopies,
+                IsDeleted = book.IsDeleted
+            };
+
+            return View(updateBookDto); // Return the Edit view with the book details
+        }
+
+        // POST: Admin/EditBook
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditBook(UpdateBookDto model) // Accept the DTO as a parameter
+        {
+            if (ModelState.IsValid) // Validate the model
+            {
+                await _bookService.UpdateBook(model); // Call the service to update the book
+                TempData["SuccessMessage"] = "Book updated successfully."; // Optionally set a success message
+                return RedirectToAction("AllBooks"); // Redirect to the AllBooks view after updating
+            }
+
+            // If validation fails, return the view with the current model to show errors
+            return View(model);
+        }
+
+
+        // POST: Admin/DeleteBook/{id}
+        [HttpPost]
+        [ValidateAntiForgeryToken] // To protect against CSRF attacks
+        public IActionResult DeleteBook(Guid id)
+        {
+            var result = _bookService.DeleteBook(id); // Call the service to delete the book
+            return RedirectToAction("AllBooks");
+        }
+
+        // GET: Admin/EditLoan/{id}
+        public async Task<IActionResult> EditLoan(Guid id)
+        {
+            var loan = await _loanService.GetLoanById(id); // Fetch the loan details using the service
+            if (loan == null || loan.IsReturned)
+            {
+                return NotFound(); // Return 404 if loan does not exist or is deleted
+            }
+
+            // Map the loan entity to the UpdateLoanDto
+            var updateLoanDto = new UpdateLoanDto
+            {
+                LoanId = loan.LoanId,
+                DueTime = loan.DueDate,
+                ReturnDate = loan.ReturnDate,
+                IsReturned = loan.IsReturned,
+            };
+
+            return View(updateLoanDto); // Return the Edit view with the loan details
+        }
+
+        // POST: Admin/EditLoan
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditLoan(UpdateLoanDto model) // Accept the DTO as a parameter
+        {
+            if (ModelState.IsValid) // Validate the model
+            {
+                await _loanService.UpdateLoan(model); // Call the service to update the loan
+                TempData["SuccessMessage"] = "Loan updated successfully."; // Optionally set a success message
+                return RedirectToAction("AllLoans"); // Redirect to the AllLoans view after updating
+
+            }
+            // If validation fails or update fails, return the view with the current model to show errors
+            return View(model);
+        }
+
+        // GET: Admin/EditUser/{id}
+        public async Task<IActionResult> EditUser(Guid id)
+        {
+            var user = await _userService.GetUserByIdAsync(id); // Fetch user by ID
+            if (user == null)
+            {
+                return NotFound(); // Return 404 if user not found
+            }
+
+            // Map ReadUserDto to UpdateUserDto for editing
+            var updateUserDto = new UpdateUserDto
+            {
+                Id = user.UserId,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                ImageURL = user.ImageUrl,
+                IsDeleted = user.IsDeleted,
+                IsBlocked = user.IsBlocked,
+                IsPremium = user.IsPremium
+            };
+
+            return View(updateUserDto); // Return the view with the user data
+        }
+
+        // POST: Admin/EditUser
+        [HttpPost]
+        public async Task<IActionResult> EditUser(UpdateUserDto updateUserDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(updateUserDto); // Return the view with validation errors
+            }
+
+
+            var Result = await _userService.UpdateUserAsync(updateUserDto.Id, updateUserDto); // Update user
+            if (Result.Succeeded)
+            {
+                return RedirectToAction("AllMembers"); // Redirect to AllMembers after success
+            }
+
+            return View(updateUserDto);
+        }
+
+        // POST: Admin/DeleteUser/{id}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUser(Guid id)
+        {  
+            await _userService.DeleteUserAsync(id); // Call the delete method in the service
+            return RedirectToAction("AllMembers"); // Redirect to AllMembers after success
+        }
+
+       
     }
+
 }
