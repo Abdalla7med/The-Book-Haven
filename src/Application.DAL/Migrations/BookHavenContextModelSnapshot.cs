@@ -168,6 +168,68 @@ namespace Application.DAL.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = new Guid("b0ebdf8f-cc19-4d95-8b7f-bbfa70c687e1"),
+                            IsDeleted = false,
+                            Name = "Fiction"
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("f64d3aa9-837d-45ef-ad38-27457f2316de"),
+                            IsDeleted = false,
+                            Name = "Non-Fiction"
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("47d677fb-b1b3-4697-9903-9c3cb4a2e802"),
+                            IsDeleted = false,
+                            Name = "Science"
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("36d5c6ef-ad7c-42bb-a65d-f0dfa07b9175"),
+                            IsDeleted = false,
+                            Name = "Technology"
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("43bf38f3-53ca-4fed-839c-a066542176ca"),
+                            IsDeleted = false,
+                            Name = "History"
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("d69a1c57-a5c2-49e8-9ff7-d5ca92e20077"),
+                            IsDeleted = false,
+                            Name = "Biography"
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("ad2e417b-6dd2-494f-9906-7eabb5e756c4"),
+                            IsDeleted = false,
+                            Name = "Fantasy"
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("71cc1e62-7478-4abc-a8e7-4787b5ad5d8c"),
+                            IsDeleted = false,
+                            Name = "Mystery"
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("e2fdc335-eb24-49c9-a858-e1e4066847c7"),
+                            IsDeleted = false,
+                            Name = "Romance"
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("1029e1fd-4a13-4b96-926b-4c44388a7356"),
+                            IsDeleted = false,
+                            Name = "Self-Help"
+                        });
                 });
 
             modelBuilder.Entity("Application.DAL.Loan", b =>

@@ -35,8 +35,8 @@ namespace Application.DAL
         public bool IsPremium { get; set; } = false;
 
         [DataType(DataType.ImageUrl)]
-        [RegularExpression(@"\w+\.(jpg|png)", ErrorMessage = "The image URL must be a valid .png or .jpg file")]
-        public string? ImageUrl { set; get; }
+        [RegularExpression(@"\w+\.(jpg|png|jpeg)", ErrorMessage = "The image URL must be a valid .png or .jpg file")]
+        public string? ImageUrl { set; get; } = string.Empty;
         // Navigation property: List of books authored by this user (only applicable if the user is an "Author")
         public ICollection<Book>? BooksAuthored { get; set; }
 

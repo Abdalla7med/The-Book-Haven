@@ -16,7 +16,7 @@ namespace Application.Shared
 
         [DataType(DataType.ImageUrl)]
         [RegularExpression(@"\w+\.(jpg|png)", ErrorMessage = "The image URL must be a valid .png or .jpg file")]
-        public string CoverUrl { get; set; }
+        public string? CoverUrl { get; set; }
 
         [Required]
         public string ISBN { get; set; }
@@ -27,8 +27,8 @@ namespace Application.Shared
         [Required]
         public int AvailableCopies { get; set; }
 
-        [Required]
-        public Guid CategoryId { get; set; }  // Select category
+        //[Required]
+        //public Guid CategoryId { get; set; }  // Select category
 
         [Required]
         public string? AuthorName { get; set; }  // Add author names manually

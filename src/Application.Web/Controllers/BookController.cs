@@ -2,29 +2,54 @@
 using Microsoft.AspNetCore.Mvc;
 using Application.Shared;
 using Microsoft.AspNetCore.Authorization;
+using Application.DAL;
+using Microsoft.AspNetCore.Mvc.Rendering;
 namespace Application.Web.Controllers
 {
     public class BookController : Controller
     {
         private readonly IBookService _bookService;
-        private readonly ILogger<BookController> _logger;    
+        private readonly ILogger<BookController> _logger;
+        private readonly ICategoryService _categoryService;
 
-        public BookController(IBookService bookService, ILogger<BookController> logger)
+        public BookController(IBookService bookService, ILogger<BookController> logger, ICategoryService categoryService)
         {
             _bookService = bookService;
             _logger = logger;
+            _categoryService = categoryService;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index( string category, int page = 1, string searchTerm = "")
         {
-            IEnumerable<ReadBookDto> Books = await _bookService.AllBooks();
-            /// sending books to view 
-            return View("BookIndex", Books);
+
+            int pageSize = 10; // Number of books per page
+
+            // Load all books if no filters are applied
+            var paginatedBooks = await _bookService.GetBooksAsync(searchTerm, category, page, pageSize);
+
+            /// Cancle category for a while 
+            //var Categories = await _categoryService.AllCategories();
+           
+            //if (Categories == null || !Categories.Any())
+            //{
+            //    ModelState.AddModelError("", "No categories found.");
+            //    return View("BookIndex", paginatedBooks);
+            //}
+
+            //ViewBag.Categories = Categories != null && Categories.Any()
+            //    ? new SelectList(Categories, "CategoryId", "Name")
+            //    : new SelectList(Enumerable.Empty<Category>(), "CategoryId", "Name");
+
+            // Pass the paginated list to the view
+            return View("BookIndex", paginatedBooks);
         }
+
 
         [HttpGet]
         public IActionResult Create()
         {
+
             return View();
         }
 
@@ -90,15 +115,6 @@ namespace Application.Web.Controllers
             return View(book);
         }
 
-        public async Task<IActionResult> Delete(Guid id)
-        {
-
-            await _bookService.DeleteBook(id);
-            /// Return to index page 
-            
-            return RedirectToAction("Index");
-        }
-
         public async Task<IActionResult> Details(Guid id)
         {
             var book = await _bookService.GetBookById(id);
@@ -108,9 +124,18 @@ namespace Application.Web.Controllers
             return View(book);
         }
 
+        public async Task<IActionResult> Delete(Guid id)
+        {
+
+            await _bookService.DeleteBook(id);
+            /// Return to index page 
+
+            return RedirectToAction("Index");
+        }
+
         // POST: Book/Delete/5
         [HttpPost, ActionName("Delete")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Author")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {

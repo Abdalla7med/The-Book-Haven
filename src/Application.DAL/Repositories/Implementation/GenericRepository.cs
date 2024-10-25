@@ -31,6 +31,7 @@ namespace Application.DAL.Repositories
         {
             _dbset.Update(entity);
             await SaveAsync();
+
         }
 
 
@@ -64,6 +65,11 @@ namespace Application.DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
-       
+        public IQueryable<T> GetAllAsQueryable()
+        {
+            return _dbset.AsQueryable();
+        }
+
+
     }
 }

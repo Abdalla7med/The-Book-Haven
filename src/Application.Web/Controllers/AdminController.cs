@@ -45,8 +45,8 @@ namespace Application.Web.Controllers
         public async Task<IActionResult> AllMembers()
         {
             var users = await _userService.GetAllUsersAsync(); // Assuming this returns IEnumerable<ApplicationUser>
-            var userDtos = _mapper.Map<IEnumerable<ReadUserDto>>(users);
-            return View(userDtos);
+          
+            return View("AllMember",users);
         }
 
         public async Task<IActionResult> AllLoans()
@@ -98,6 +98,7 @@ namespace Application.Web.Controllers
                     // Set the ImageURL in the model
                     model.ImageURL = "/uploads/images/" + fileName;  // Relative path
                 }
+
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Please upload an image.");
@@ -122,42 +123,42 @@ namespace Application.Web.Controllers
             return View(model);
         }
 
-        // GET: Admin/EditBook/{id}
-        public async Task<IActionResult> EditBook(Guid id)
-        {
-            var book = await _bookService.GetBookById(id); // Fetch the book details using the service
-            if (book == null)
-            {
-                return NotFound(); // Return 404 if the book does not exist
-            }
+        //// GET: Admin/EditBook/{id}
+        //public async Task<IActionResult> EditBook(Guid id)
+        //{
+        //    var book = await _bookService.GetBookById(id); // Fetch the book details using the service
+        //    if (book == null)
+        //    {
+        //        return NotFound(); // Return 404 if the book does not exist
+        //    }
 
-            // Map the book entity to the UpdateBookDto
-            var updateBookDto = new UpdateBookDto
-            {
-                BookId = book.Id,
-                CoverUrl = book.CoverUrl,
-                AvailableCopies = book.AvailableCopies,
-                IsDeleted = book.IsDeleted
-            };
+        //    // Map the book entity to the UpdateBookDto
+        //    var updateBookDto = new UpdateBookDto
+        //    {
+        //        BookId = book.Id,
+        //        CoverUrl = book.CoverUrl,
+        //        AvailableCopies = book.AvailableCopies ?? 0,
+        //        IsDeleted = book.IsDeleted
+        //    };
 
-            return View(updateBookDto); // Return the Edit view with the book details
-        }
+        //    return View(updateBookDto); // Return the Edit view with the book details
+        //}
 
-        // POST: Admin/EditBook
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditBook(UpdateBookDto model) // Accept the DTO as a parameter
-        {
-            if (ModelState.IsValid) // Validate the model
-            {
-                await _bookService.UpdateBook(model); // Call the service to update the book
-                TempData["SuccessMessage"] = "Book updated successfully."; // Optionally set a success message
-                return RedirectToAction("AllBooks"); // Redirect to the AllBooks view after updating
-            }
+        //// POST: Admin/EditBook
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> EditBook(UpdateBookDto model) // Accept the DTO as a parameter
+        //{
+        //    if (ModelState.IsValid) // Validate the model
+        //    {
+        //        await _bookService.UpdateBook(model); // Call the service to update the book
+        //        TempData["SuccessMessage"] = "Book updated successfully."; // Optionally set a success message
+        //        return RedirectToAction("AllBooks"); // Redirect to the AllBooks view after updating
+        //    }
 
-            // If validation fails, return the view with the current model to show errors
-            return View(model);
-        }
+        //    // If validation fails, return the view with the current model to show errors
+        //    return View(model);
+        //}
 
 
         // POST: Admin/DeleteBook/{id}
@@ -220,9 +221,7 @@ namespace Application.Web.Controllers
             {
                 Id = user.UserId,
                 FirstName = user.FirstName,
-                LastName = user.LastName,
                 Email = user.Email,
-                ImageURL = user.ImageUrl,
                 IsDeleted = user.IsDeleted,
                 IsBlocked = user.IsBlocked,
                 IsPremium = user.IsPremium
@@ -255,7 +254,7 @@ namespace Application.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteUser(Guid id)
         {  
-            await _userService.DeleteUserAsync(id); // Call the delete method in the service
+            await _userService.SoftDeleteUserAsync(id); // Call the delete method in the service
             return RedirectToAction("AllMembers"); // Redirect to AllMembers after success
         }
 

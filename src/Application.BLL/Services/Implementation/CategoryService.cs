@@ -19,9 +19,23 @@ namespace Application.BLL
 
         public async Task<IEnumerable<ReadCategoryDto>> AllCategories()
         {
-            var categories = await _unitOfWork.CategoryRepository.GetAllAsync();]
+            var categories = await _unitOfWork.CategoryRepository.GetAllAsync();
             
-            return _mapper.Map<IEnumerable<ReadCategoryDto>>(categories);
+            List<ReadCategoryDto>categoryDtos = new List<ReadCategoryDto>(); 
+            
+            foreach(var category in categories)
+            {
+                var Dto = new ReadCategoryDto()
+                {
+                    Id = category.CategoryId,
+                    Name = category.Name,
+                    Books = category.Books.Select(b => b.Title).ToList()
+
+                };
+                categoryDtos.Add(Dto);
+
+            }
+            return categoryDtos;
         }
 
         public async Task<ReadCategoryDto> GetCategoryById(Guid categoryId)
@@ -30,7 +44,14 @@ namespace Application.BLL
             if (category == null)
                 throw new ArgumentException("Category not found");
 
-            return _mapper.Map<ReadCategoryDto>(category);
+            var Dto = new ReadCategoryDto()
+            {
+                Id = category.CategoryId,
+                Name = category.Name,
+                Books = category.Books.Select(b => b.Title).ToList()
+
+            };
+            return Dto;
         }
 
         public async Task AddCategory(CreateCategoryDto createCategoryDto)

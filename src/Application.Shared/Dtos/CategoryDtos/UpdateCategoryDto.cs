@@ -10,7 +10,6 @@ namespace Application.Shared
     {
         public Guid CategoryId { set; get; }
         public string Name { set; get; }
-
         // Admin controls soft-delete
         public bool IsDeleted { get; set; }  // Admin-specific field for soft delete
     }

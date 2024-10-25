@@ -23,6 +23,9 @@ namespace Application.DAL.Repositories
 
         public async Task<Category> GetCategory(string name) => await _dbset.Include(C => C.Books)
                                                                             .FirstOrDefaultAsync(C => C.Name == name);
-
+        public override async Task<IEnumerable<Category>> GetAllAsync()
+        {
+            return await _context.Categories.ToListAsync();
+        }
     }
 }

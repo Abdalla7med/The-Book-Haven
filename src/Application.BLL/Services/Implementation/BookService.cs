@@ -2,12 +2,14 @@
 using Application.DAL.UnitOfWork;
 using Application.Shared;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Application.BLL
 {
@@ -34,14 +36,14 @@ namespace Application.BLL
         public async Task AddBook(CreateBookDto createBookDto)
         {
             // Get Category using its Id
-            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(createBookDto.CategoryId);
+          /*  var category = await _unitOfWork.CategoryRepository.GetByIdAsync(createBookDto.CategoryId);
 
             // Category validation
             if (category == null)
             {
-                throw new ArgumentException("Category Not Found");
+                throw new ArgumentException("Category doesn't exists");  
             }
-
+            */
             // Get authors by searching their names
            
             var author = await _unitOfWork.UserRepository.GetUserByNameAsync(createBookDto.AuthorName);
@@ -65,13 +67,12 @@ namespace Application.BLL
                 ISBN = createBookDto.ISBN,
                 IsDeleted = false,
                 CoverUrl = createBookDto.CoverUrl,
-                Category = category,
-                CategoryId = category.CategoryId,
                 Loans = new List<Loan>(),
                 AvailableCopies = createBookDto.AvailableCopies,
                 Author = author,
                 PublicationYear = createBookDto.PublicationYear
             };
+
 
             // Add book and save changes
             await _unitOfWork.BookRepository.AddAsync(book);
@@ -87,6 +88,35 @@ namespace Application.BLL
             var books = await _unitOfWork.BookRepository.GetAllAsync();
             // Using AutoMapper to map
             return _mapper.Map<IEnumerable<ReadBookDto>>(books);
+        }
+
+        public async Task<PaginatedList<ReadBookDto>> GetBooksAsync(string searchTerm, string category, int pageIndex, int pageSize)
+        {
+            var query = _unitOfWork.BookRepository.GetAllAsQueryable();
+
+            // Filtering based on searchTerm and category
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                query = query.Where(b => b.Title.Contains(searchTerm));
+            }
+
+            if (!string.IsNullOrEmpty(category))
+            {
+                query = query.Where(b => b.Category.Name == category);
+            }
+
+            // Project to DTO (assuming you have a ReadBookDto class)
+            var booksDtoQuery = query.Select(book => new ReadBookDto
+            {
+                Id = book.BookId,
+                Title = book.Title,
+                AuthorName = book.Author.FirstName,
+                AvailableCopies = book.AvailableCopies,
+                CoverUrl = book.CoverUrl
+            });
+
+            // Paginate the results using PaginatedList
+            return await Task.FromResult(PaginatedList<ReadBookDto>.Create(booksDtoQuery, pageIndex, pageSize));
         }
 
         /// <summary>
@@ -135,6 +165,37 @@ namespace Application.BLL
 
             return _mapper.Map<IEnumerable<ReadBookDto>>(AuthoredBooks);
 
+        }
+
+        public async Task<PaginatedList<ReadBookDto>> GetAuthoredBooksAsync(Guid authorId, string searchTerm, string category, int pageIndex, int pageSize)
+        {
+            var books = _unitOfWork.BookRepository.GetAllAsQueryable();
+
+            books = books.Where(b => b.AuthorId == authorId);
+
+            // Apply filtering if search term is provided
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                books = books.Where(b => b.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+            }
+
+            // Apply filtering if category is provided
+            if (!string.IsNullOrEmpty(category))
+            {
+                books = books.Where(b => b.Category.Name == category);
+            }
+
+            var booksDtoQuery = books.Select(book => new ReadBookDto
+            {
+                Id = book.BookId,
+                Title = book.Title,
+                AuthorName = book.Author.FirstName,
+                AvailableCopies = book.AvailableCopies,
+                CoverUrl = book.CoverUrl
+            });
+
+            // Create a paginated list
+            return await Task.FromResult(PaginatedList<ReadBookDto>.Create(booksDtoQuery, pageIndex, pageSize));
         }
 
         /// <summary>

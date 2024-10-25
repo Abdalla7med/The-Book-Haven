@@ -54,11 +54,10 @@ namespace Application.Web.Controllers
                     // Set the ImageURL in the model
                     model.ImageURL = "/uploads/images/" + fileName;  // Relative path
                 }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Please upload an image.");
-                    return View(model);
-                }
+
+                if (model.ImageURL == null)
+                    model.ImageURL = " ";
+
                 // Register the user via the user service
                 var result = await _userService.RegisterUserAsync(model);
 
@@ -92,21 +91,21 @@ namespace Application.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(string Email, String Password)
+        public async Task<IActionResult> Login(string UserNameOrEmail, String Password)
         {
             if (ModelState.IsValid)
             {
-                var result = await _userService.LoginUserAsync(Email, Password);
+                var result = await _userService.LoginUserAsync(UserNameOrEmail, Password);
 
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index", "Home");
                 }
 
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                ModelState.AddModelError(string.Empty,result.Errors.ElementAt(0));
             }
 
-            return View(new LoginViewModel { Password = Password, Email = Email });
+            return View(new LoginViewModel { Password = Password, UserNameOrEmail = UserNameOrEmail });
         }
 
 
@@ -130,15 +129,17 @@ namespace Application.Web.Controllers
 
             if (string.IsNullOrEmpty(userId))
             {
-                // Handle the case where the user ID is not found in the claims
-                return Unauthorized("User is not logged in.");
+                // Add error to ModelState for not being logged in
+                ModelState.AddModelError("", "User is not logged in.");
+                return View("Edit"); // Return view with the error message
             }
 
             // Try to parse the user ID to Guid
             if (!Guid.TryParse(userId, out Guid userID))
             {
-                // Handle invalid GUID format
-                return BadRequest("Invalid user ID format.");
+                // Add error to ModelState for invalid GUID format
+                ModelState.AddModelError("", "Invalid user ID format.");
+                return View("Edit"); // Return view with the error message
             }
 
             // Fetch user details from the service
@@ -146,21 +147,21 @@ namespace Application.Web.Controllers
 
             if (user == null)
             {
-                // Handle the case where the user is not found in the database
-                return NotFound("User not found.");
+                // Add error to ModelState for user not found
+                ModelState.AddModelError("", "User not found.");
+                return View("Edit"); // Return view with the error message
             }
 
             // Create the view model based on the fetched user details
             var model = new UpdateUserDto
             {
+                Id = user.UserId,
                 FirstName = user.FirstName,
-                LastName = user.LastName,
                 Email = user.Email,
-                ImageURL = user.ImageUrl
             };
 
             // Return the EditProfile view with the model
-            return View("Edit",model);
+            return View("Edit", model);
         }
 
 
@@ -190,7 +191,7 @@ namespace Application.Web.Controllers
         [Authorize(Roles ="Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await _userService.DeleteUserAsync(id);
+            var result = await _userService.SoftDeleteUserAsync(id);
 
             if (!result.Succeeded)
             {

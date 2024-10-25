@@ -34,29 +34,45 @@ namespace Application.Web.Controllers
         public async Task<IActionResult> Dashboard()
         {
             string userId = User?.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var AuthoredBooks = await _bookService.GetBooksByAuthor(Guid.Parse(userId));
+
             ViewBag.WrittenBooks = AuthoredBooks.Count();
 
             return View();
         }
 
         /// AuthorController: Dashboard, AuthoredBooks, PublishBook.
-        
-        public async Task<IActionResult> AuthoredBooks()
+        [HttpGet]
+        public async Task<IActionResult> AuthoredBooks(string category, int page = 1, string searchTerm = "")
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-            var AuthoredBooks = await _bookService.GetBooksByAuthor(user.Id);
+            var pageIndex = 10;
+
+            var AuthoredBooks = await _bookService.GetAuthoredBooksAsync(user.Id, searchTerm, category,page, pageIndex);
+
+            //var Categories = await _categoryService.AllCategories();
+           
+            //ViewBag.Categories = new SelectList(Categories, "CategoryId", "Name");
 
             return View(AuthoredBooks);
         }
 
         [HttpGet]
-        public async Task<IActionResult> PublishBook()
+        public IActionResult PublishBook()
         {
-            // Assume you have a method to get categories
-            var categories = await _categoryService.AllCategories();
-            ViewBag.Categories = new SelectList(categories, "Id", "Name"); // Assuming Id and Name are properties
+            // Retrieve categories from the service
+            //var categories = await _categoryService.AllCategories();
+
+            //// Check if categories were retrieved successfully
+            //if (categories == null || !categories.Any())
+            //{
+            //    ModelState.AddModelError("", "No categories found.");
+            //    return View();
+            //}
+
+            //ViewBag.Categories = new SelectList(categories, "CategoryId", "Name"); // Make sure these match your properties
 
             return View();
         }
@@ -67,18 +83,14 @@ namespace Application.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // Populate categories again for the view
-                var categories1 = await _categoryService.AllCategories();
-                ViewBag.Categories = new SelectList(categories1, "Id", "Name");
-
                 return View(book);
             }
-             // Set the AuthorName to the logged -in user's name
-              book.AuthorName = User.Identity.Name;
+
             // Check if the cover image file is uploaded
             if (coverImage != null && coverImage.Length > 0)
             {
                 var fileName = Guid.NewGuid() + Path.GetExtension(coverImage.FileName);
+
                 var savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/books", fileName);
 
                 using (var stream = new FileStream(savePath, FileMode.Create))
@@ -88,19 +100,16 @@ namespace Application.Web.Controllers
 
                 book.CoverUrl = fileName;
 
-
                 await _bookService.AddBook(book);
+
                 return RedirectToAction("Dashboard");
             }
 
             ModelState.AddModelError("", "An error occurred while adding the book.");
 
-            // Populate categories again for the view
-            var categories = await _categoryService.AllCategories();
-            ViewBag.Categories = new SelectList(categories, "Id", "Name");
-
             return View(book);
         }
+
 
     }
 }

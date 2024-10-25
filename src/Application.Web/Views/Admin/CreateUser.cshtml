@@ -5,6 +5,12 @@
 }
 
 <h2> Create User </h2>
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <strong>@Html.ValidationSummary(true, "", new { @class = "text-danger" })</strong>
+    </div>
+}
 
 <form asp-action="CreateUser" enctype="multipart/form-data" method="post">
     <div class="form-group">
@@ -14,11 +20,10 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="LastName"></label>
-        <input asp-for="LastName" class="form-control" value="@Model?.LastName" />
-        <span asp-validation-for="LastName" class="text-danger"></span>
+        <label asp-for="UserName"></label>
+        <input asp-for="UserName" class="form-control" value="@Model?.UserName" />
+        <span asp-validation-for="UserName" class="text-danger"></span>
     </div>
-
     <div class="form-group">
         <label asp-for="Email"></label>
         <input asp-for="Email" class="form-control" value="@Model?.Email" />

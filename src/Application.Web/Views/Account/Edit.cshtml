@@ -6,9 +6,17 @@
 
 <h2>Edit Profile</h2>
 
+<!-- Displaying Validation Summary -->
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <strong>@Html.ValidationSummary(true, "", new { @class = "text-danger" })</strong>
+    </div>
+}
+
 <form asp-action="EditProfile" enctype="multipart/form-data" method="post">
-    <!-- Hidden field for preserving existing image -->
-    <input type="hidden" asp-for="ImageURL" />
+    <!-- Hidden field for the Id -->
+    <input type="hidden" asp-for="Id" />
 
     <div class="form-group">
         <label asp-for="FirstName"></label>
@@ -17,24 +25,9 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="LastName"></label>
-        <input asp-for="LastName" class="form-control" />
-        <span asp-validation-for="LastName" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
         <label asp-for="Email"></label>
         <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label>Upload New Profile Image</label>
-        <input type="file" name="Image" class="form-control" />
-        @if (!string.IsNullOrEmpty(Model.ImageURL))
-        {
-            <p>Current Image: <img src="@Model.ImageURL" alt="Profile Image" width="100" /></p>
-        }
     </div>
 
     <button type="submit" class="btn btn-primary">Save Changes</button>

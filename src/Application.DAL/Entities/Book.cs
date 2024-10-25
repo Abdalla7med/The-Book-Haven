@@ -17,7 +17,7 @@ namespace Application.DAL
         public int? AvailableCopies { get; set; } = 10;
         public bool IsDeleted { set; get; } = false; /// Soft Delete Property 
         //  Relationships
-        public Guid? CategoryId { get; set; }
+        public Guid? CategoryId { get; set; } 
         public Category? Category { get; set; } // nav property associated with category 
 
         public Guid? AuthorId { get; set; }

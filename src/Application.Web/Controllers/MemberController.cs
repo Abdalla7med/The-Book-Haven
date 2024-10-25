@@ -14,8 +14,10 @@ namespace Application.Web.Controllers
         {
             return View();
         }
-         
-        // books, loans, penalties, loans( returned) 
+
+        // AlBooks with Search Feature , MyLoans, MyPenalties, MyLoans( returned) -> filter Query ( Where(l => l.IsReturned); 
+
+        
 
     }
 }

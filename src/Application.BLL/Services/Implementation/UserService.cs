@@ -4,8 +4,6 @@ using Application.DAL;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Application.Shared;
-using Application.Shared.Dtos.UserDtos;
-
 public class UserService : IUserService
 {
     private readonly IMapper _mapper;
@@ -32,7 +30,7 @@ public class UserService : IUserService
         bool isFacultyEmail = userCreateDto.Email.EndsWith(facultyDomain, StringComparison.OrdinalIgnoreCase);
 
         // Validate the required fields
-        if (string.IsNullOrWhiteSpace(userCreateDto.FirstName) || string.IsNullOrWhiteSpace(userCreateDto.LastName))
+        if (string.IsNullOrWhiteSpace(userCreateDto.FirstName) )
         {
             throw new ArgumentException("FirstName and LastName are required.");
         }
@@ -41,12 +39,11 @@ public class UserService : IUserService
         var newUser = new ApplicationUser()
         {
             FirstName = userCreateDto.FirstName,
-            LastName = userCreateDto.LastName,
             Email = userCreateDto.Email,
-            UserName = $"{userCreateDto.FirstName.Trim()}{userCreateDto.LastName.Trim()}",
+            UserName = userCreateDto.UserName,
             ImageUrl = userCreateDto.ImageURL, // This can be null or empty
             IsPremium = userCreateDto.IsPremium,
-            Role = "Admin"
+            Role = userCreateDto.Role
         };
 
         newUser.IsPremium = isFacultyEmail; // Set IsPremium based on email domain
@@ -57,7 +54,7 @@ public class UserService : IUserService
         if (!result.Succeeded)
         {
             // Instead of throwing, you could log the error or return it as part of the result
-            throw new Exception("User registration failed: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+            return new ApplicationResult() { Succeeded = false, Errors = result.Errors.Select(e => e.Description).ToList()};
         }
 
         // Assign the user role
@@ -65,29 +62,43 @@ public class UserService : IUserService
         {
             if (!await _roleManager.RoleExistsAsync(userCreateDto.Role))
             {
-                throw new ArgumentException($"Role '{userCreateDto.Role}' does not exist.");
+                new ApplicationResult() { Succeeded = false, Errors = new List<string>() { "Role doesn't exists" } };
             }
+            /// this will create user role 
             await _userManager.AddToRoleAsync(newUser, userCreateDto.Role);
         }
-
+        // save multiple operations 
         await _unitOfWork.CompleteAsync();
 
         return new ApplicationResult(result);
     }
 
-
     // Login User
-    public async Task<ApplicationResult> LoginUserAsync(string email, string password)
+    public async Task<ApplicationResult> LoginUserAsync(string UserNameOrEmail, string password)
     {
-        var user = await _userManager.FindByEmailAsync(email);
-        if (user == null || user.IsDeleted)
+        // Check if the input is an email or username
+         var user = await _userManager.FindByEmailAsync(UserNameOrEmail);
+
+         var User = await _userManager.FindByNameAsync(UserNameOrEmail);
+
+        if (user == null && User == null)
         {
             return new ApplicationResult() { Succeeded = false , Errors = new List<string>() { "Invalid User Credentials" } }; // User not found or is marked as deleted
         }
 
-        SignInResult result = await _signInManager.PasswordSignInAsync(user, password, isPersistent: false, lockoutOnFailure: false);
+        SignInResult result;
 
-        return new ApplicationResult() { Succeeded = result.Succeeded }; 
+        if (user != null)
+        {
+           result = await _signInManager.PasswordSignInAsync(user, password, isPersistent: false, lockoutOnFailure: false);
+            return new ApplicationResult() { Succeeded = result.Succeeded };
+
+        }
+
+        result = await _signInManager.PasswordSignInAsync(User, password, isPersistent: false, lockoutOnFailure: false);
+        return new ApplicationResult() { Succeeded = result.Succeeded };
+
+
     }
 
     // Update User Info
@@ -97,19 +108,18 @@ public class UserService : IUserService
 
         if (user == null || user.IsDeleted)
         {
-            throw new KeyNotFoundException("User not found or deleted.");
+            return new ApplicationResult() { Succeeded = false, Errors = new List<string> { "User Not Found" } };
         }
 
         // Update user properties
         user.FirstName = userUpdateDto.FirstName ?? user.FirstName;
-        user.LastName = userUpdateDto.LastName ?? user.LastName;
         user.Email = userUpdateDto.Email ?? user.Email;
 
         // Update the user in Identity
         IdentityResult result = await _userManager.UpdateAsync(user);
         if (!result.Succeeded)
         {
-            throw new Exception("Failed to update user: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+            return new ApplicationResult() { Succeeded = false, Errors = result.Errors.Select(e => e.Description)};
         }
 
         await _unitOfWork.CompleteAsync();
@@ -118,13 +128,13 @@ public class UserService : IUserService
     }
 
     // Soft Delete User (Only if no loans or unpaid penalties)
-    public async Task SoftDeleteUserAsync(Guid userId)
+    public async Task<ApplicationResult> SoftDeleteUserAsync(Guid userId)
     {
         var user = await _unitOfWork.UserRepository.GetByIdAsync(userId); // Load navigation properties
 
         if (user == null || user.IsDeleted)
         {
-            throw new KeyNotFoundException("User not found or deleted.");
+            return new ApplicationResult() { Succeeded = false, Errors = new List<string> { "User Not Found" } };
         }
 
         // Check if the user has active loans or unpaid penalties
@@ -133,17 +143,19 @@ public class UserService : IUserService
 
         if (hasLoans || hasUnpaidPenalties)
         {
-            throw new InvalidOperationException("User cannot be deleted due to active loans or unpaid penalties.");
+            return new ApplicationResult { Succeeded = false, Errors = new List<string> { "User cannot be deleted due to active loans or unpaid penalties." } };
         }
 
         user.IsDeleted = true; // Mark user as deleted
         var result = await _userManager.UpdateAsync(user);
         if (!result.Succeeded)
         {
-            throw new Exception("Failed to delete user: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+            return new ApplicationResult { Succeeded = false, Errors = result.Errors.Select(er => er.Description).ToList() };
         }
 
         await _unitOfWork.CompleteAsync();
+
+        return new ApplicationResult { Succeeded = true, Data = result };
     }
 
     // Get User Info
@@ -159,7 +171,6 @@ public class UserService : IUserService
         {
             UserId = user.Id,
             FirstName = user.FirstName,
-            LastName = user.LastName,
             Email = user.Email,
             Role = user.Role,
             IsBlocked = user.IsBlocked,
@@ -167,6 +178,7 @@ public class UserService : IUserService
             IsDeleted = user.IsDeleted,
             IsPremium = user.IsPremium
         };
+
         return Dto;
     }
 
@@ -187,7 +199,6 @@ public class UserService : IUserService
             {
                 UserId = user.Id,
                 FirstName = user.FirstName,
-                LastName = user.LastName,
                 Email = user.Email, 
                 Role = user.Role,
                 IsBlocked= user.IsBlocked,
@@ -206,9 +217,27 @@ public class UserService : IUserService
     {
         var users = await _unitOfWork.UserRepository.GetAllAsync();
         var filteredUsers = users.Where(u => u.Role.Equals(role, StringComparison.OrdinalIgnoreCase)).ToList();
-        return _mapper.Map<IEnumerable<ReadUserDto>>(filteredUsers);
-    }
+        /// Mapp manually 
+        List<ReadUserDto> UserDtos = new List<ReadUserDto>();
+        foreach (var user in filteredUsers)
+        {
+            var Dto = new ReadUserDto()
+            {
+                UserId = user.Id,
+                FirstName = user.FirstName,
+                Email = user.Email,
+                Role = user.Role,
+                IsBlocked = user.IsBlocked,
+                ImageUrl = user.ImageUrl,
+                IsDeleted = user.IsDeleted,
+                IsPremium = user.IsPremium
+            };
+            UserDtos.Add(Dto);
 
+        }
+
+        return UserDtos;
+    }
     public async Task BlockUserAsync(Guid id)
     {
         var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
@@ -237,7 +266,21 @@ public class UserService : IUserService
 
         var user = await _userManager.FindByEmailAsync(userDto.Email);
 
-        return _mapper.Map<ReadUserDto>(user);
+        /// manual mapping 
+        var Dto = new ReadUserDto()
+        {
+            UserId = user.Id,
+            FirstName = user.FirstName,
+            Email = user.Email,
+            Role = user.Role,
+            IsBlocked = user.IsBlocked,
+            ImageUrl = user.ImageUrl,
+            IsDeleted = user.IsDeleted,
+            IsPremium = user.IsPremium
+        };
+        return Dto;
+
+        //return _mapper.Map<ReadUserDto>(user);
     }
 
     /// <summary>
@@ -249,60 +292,5 @@ public class UserService : IUserService
         await _signInManager.SignOutAsync();
     }
 
-    /// <summary>
-    ///  Change Password 
-    /// </summary>
-    /// <param name="changePasswordDto"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    /// <exception cref="Exception"></exception>
-    public async Task<bool> ChangePasswordAsync(ChangePasswordDto changePasswordDto)
-    {
-        var user = await _userManager.FindByEmailAsync(changePasswordDto.Email);
-        if (user == null)
-        {
-            throw new ArgumentException("User not found.");
-        }
-
-        var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.OldPassword, changePasswordDto.NewPassword);
-        if (!result.Succeeded)
-        {
-            throw new Exception("Failed to change password: " + string.Join(", ", result.Errors.Select(e => e.Description)));
-        }
-
-        await _unitOfWork.CompleteAsync();
-        return true;
-    }
-
-    public async Task<bool> ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto)
-    {
-        var user = await _userManager.FindByEmailAsync(forgotPasswordDto.Email);
-        if (user == null)
-        {
-            throw new ArgumentException("User not found.");
-        }
-
-        // Generate password reset token
-        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-        // Here you would normally send the token to the user's email
-        // You can implement an email service to handle that
-
-        return true; // Indicate that the password reset email has been sent
-    }
-
-  
-
-    public async Task<ApplicationResult> DeleteUserAsync(Guid userId)
-    {
-        await _unitOfWork.UserRepository.DeleteAsyncById(userId);
-
-        var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
-        if (user == null || user.IsDeleted)
-            return new ApplicationResult() { Succeeded = true };
-
-        return new ApplicationResult() { Succeeded = false,  };
-
-
-    }
 
 }

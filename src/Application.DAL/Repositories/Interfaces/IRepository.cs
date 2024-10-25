@@ -15,5 +15,6 @@ namespace Application.DAL.Repositories
         Task Delete(T entity);
         Task DeleteAsyncById(object id); // for case of GUID
         Task SaveAsync();
+        IQueryable<T> GetAllAsQueryable();
     }
 }

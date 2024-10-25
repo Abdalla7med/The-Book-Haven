@@ -15,14 +15,16 @@ namespace Application.DAL.Repositories
 
         public async Task<Book> GetBookByNameAsync(string BookTitle)
         {
-            return await _dbset.FirstOrDefaultAsync(b => b.Title == BookTitle);
+            return await _dbset.Include(b => b.Author)
+                                .FirstOrDefaultAsync(b => b.Title == BookTitle);
 
 
         }
 
         public async Task<Book> GetBooksByCategoryAsync(string CategoryName)
         {
-            return await _dbset.FirstOrDefaultAsync(b => b.Category.Name == CategoryName);
+            return await _dbset.Include(b => b.Author).
+                                FirstOrDefaultAsync(b => b.Category.Name == CategoryName);
         }
 
         public override async Task<Book> GetByIdAsync(Guid id)

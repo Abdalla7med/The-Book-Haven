@@ -12,6 +12,7 @@ namespace Application.BLL
         Task<IEnumerable<ReadPenaltyDto>> AllPenalties();
         Task<ReadPenaltyDto> GetPenaltyByLoan(Guid LoanId);
         Task<IEnumerable<ReadPenaltyDto>> GetPenaltiesByMember(Guid MemberId);
+        Task<IEnumerable<ReadPenaltyDto>> GetPaidPenaltiesByMember(Guid MemberId);
         Task PayPenalty(Guid loanId, decimal amount);
         Task AddPenalty(CreatePenaltyDto createPenaltyDto);
 

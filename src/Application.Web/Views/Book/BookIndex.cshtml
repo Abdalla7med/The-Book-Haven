@@ -1,28 +1,99 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@model IEnumerable<Application.Shared.ReadBookDto>;
+﻿@model Application.Shared.PaginatedList<Application.Shared.ReadBookDto>
 
-@{
-    ViewData["Title"] = "Books";
+ @if (User.IsInRole("Admin") || User.IsInRole("Author"))
+{
+    <h2>Manage Books</h2>
 }
 
-<div class="container">
-    <h2 class="mt-4">Available Books</h2>
-    <div class="row">
-        @foreach (var book in Model)
-        {
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="@Url.Content("~/images/books/" + book.CoverUrl)" class="card-img-top" alt="@book.Title" />
-                    <div class="card-body">
-                        <h5 class="card-title">@book.Title</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">@book.AuthorName</h6>
-                        <p class="card-text">Published: @book.PublicationYear</p>
-                       <!-- <a href="//Url.Action("Details", "Books", new { id = book.Bookid   })" class="btn btn-primary">View Details</a> -->
-                    </div>
+else
+{
+    <h2>All Books</h2>
+}
+<!-- Filter Form -->
+<form method="get" action="/Book/LoanBooks" class="mb-4">
+    <div class="form-group">
+        <input type="text" class="form-control" name="searchTerm" placeholder="Search by title" value="@Context.Request.Query["searchTerm"]" />
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
+</form>
+
+<!-- Book Cards Grid -->
+<div class="row">
+    @foreach (var book in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="@book.CoverUrl" class="card-img-top" alt="Cover Image" style="height: 200px; object-fit: cover;" />
+                <div class="card-body">
+                    <h5 class="card-title">@book.Title</h5>
+                    <p class="card-text">
+                        <strong>Author:</strong> @book.AuthorName <br />
+                        <strong>Available Copies:</strong> @book.AvailableCopies
+                        <br />
+                        <!-- Availability Status with Color -->
+                        <span style="color:@(book.AvailableCopies > 0 ? "green" : "red")">
+                            @(book.AvailableCopies > 0 ? "Available" : "Not Available")
+                        </span>
+                    </p>
+                </div>
+                <div class="card-footer text-center">
+                    @if (User.IsInRole("Admin") || User.IsInRole("Author"))
+                    {
+                        <!-- Admin/Author can edit or delete -->
+                        <form method="post" action="/Book/EditBook">
+                            <input type="hidden" name="bookId" value="@book.Id" />
+                            <button type="submit" class="btn btn-primary">Edit</button>
+                        </form>
+                        <form method="post" action="/Book/DeleteBook">
+                            <input type="hidden" name="bookId" value="@book.Id" />
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    }
+                    else if (User.IsInRole("Member") && book.AvailableCopies > 0)
+                    {
+                        <!-- Members can loan if available -->
+                        <form method="post" action="/Book/LoanBook">
+                            <input type="hidden" name="bookId" value="@book.Id" />
+                            <button type="submit" class="btn btn-success">Loan Book</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <button class="btn btn-secondary" disabled>Not Available</button>
+                    }
                 </div>
             </div>
+        </div>
+    }
+    }
+</div>
+
+<!-- Pagination controls -->
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item">
+                <a class="page-link" href="?page=@(Model.PageIndex - 1)&searchTerm=@Context.Request.Query["searchTerm"]" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
         }
-    </div>
-</div> 
+
+        @for (var i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                <a class="page-link" href="?page=@i&searchTerm=@Context.Request.Query["searchTerm"]">@i</a>
+            </li>
+        }
+
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item">
+                <a class="page-link" href="?page=@(Model.PageIndex + 1)&searchTerm=@Context.Request.Query["searchTerm"]" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        }
+    </ul>
+</nav>

@@ -27,6 +27,7 @@ namespace Application.BLL
         /// <returns></returns>
         Task<ReadLoanDto> GetLoanById(Guid LoanId);
         Task<IEnumerable<ReadLoanDto>> GetLoansByMember(Guid MemberId);
+        Task<IEnumerable<ReadLoanDto>> GetReturnedLoansByMember(Guid MemberId);
         Task<IEnumerable<ReadLoanDto>> GetLoansByBook(Guid BookId);
         /// <summary>
         /// Incase of missing something or edit Due date 

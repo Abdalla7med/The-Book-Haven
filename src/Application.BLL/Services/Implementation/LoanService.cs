@@ -5,6 +5,7 @@ using AutoMapper;
 
 namespace Application.BLL
 {
+    /// No use of AutoMapper (done) 
     public class LoanService : ILoanService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -22,15 +23,41 @@ namespace Application.BLL
 
             if (loan == null)
                 throw new ArgumentException("Loan not found");
-
-            return _mapper.Map<ReadLoanDto>(loan);
+            var Dto = new ReadLoanDto()
+            {
+                LoanId = loan.LoanId,
+                LoanDate = loan.LoanDate,
+                DueDate = loan.DueDate,
+                ReturnDate = loan.ReturnDate,
+                IsReturned = loan.IsReturned,
+                BookTitle = loan.Book.Title,
+                MemberName = loan.Member.FirstName, 
+            };
+            return Dto;
         }
 
         public async Task<IEnumerable<ReadLoanDto>> AllLoans()
         {
             var loans = await _unitOfWork.LoanRepository.GetAllAsync();
+            List<ReadLoanDto> loanDtos = new List<ReadLoanDto>();
 
-            return _mapper.Map<IEnumerable<ReadLoanDto>>(loans);
+            foreach(var loan in loans)
+            {
+                var Dto = new ReadLoanDto()
+                {
+                    LoanId = loan.LoanId,
+                    LoanDate = loan.LoanDate,
+                    DueDate = loan.DueDate,
+                    ReturnDate = loan.ReturnDate,
+                    IsReturned = loan.IsReturned,
+                    BookTitle = loan.Book.Title,
+                    MemberName = loan.Member.FirstName,
+                };
+
+                loanDtos.Add(Dto);
+            }
+
+            return loanDtos;
         }
 
         public async Task<IEnumerable<ReadLoanDto>> GetLoansByMember(Guid memberId)
@@ -38,15 +65,78 @@ namespace Application.BLL
             var loans = await _unitOfWork.LoanRepository.GetAllAsync();
             loans = loans.Where(l => l.MemberId == memberId).ToList();
 
-            return _mapper.Map<IEnumerable<ReadLoanDto>>(loans);
+            List<ReadLoanDto> loanDtos = new List<ReadLoanDto>();
+
+            foreach (var loan in loans)
+            {
+                var Dto = new ReadLoanDto()
+                {
+                    LoanId = loan.LoanId,
+                    LoanDate = loan.LoanDate,
+                    DueDate = loan.DueDate,
+                    ReturnDate = loan.ReturnDate,
+                    IsReturned = loan.IsReturned,
+                    BookTitle = loan.Book.Title,
+                    MemberName = loan.Member.FirstName,
+                };
+
+                loanDtos.Add(Dto);
+            }
+
+            return loanDtos;
         }
 
+        public async Task<IEnumerable<ReadLoanDto>> GetReturnedLoansByMember(Guid MemberId)
+        {
+
+            var loans = await _unitOfWork.LoanRepository.GetAllAsync();
+            loans = loans.Where(l => l.IsReturned); /// Get Returned Loans
+
+            List<ReadLoanDto> loanDtos = new List<ReadLoanDto>();
+
+            foreach (var loan in loans)
+            {
+                var Dto = new ReadLoanDto()
+                {
+                    LoanId = loan.LoanId,
+                    LoanDate = loan.LoanDate,
+                    DueDate = loan.DueDate,
+                    ReturnDate = loan.ReturnDate,
+                    IsReturned = loan.IsReturned,
+                    BookTitle = loan.Book.Title,
+                    MemberName = loan.Member.FirstName,
+                };
+
+                loanDtos.Add(Dto);
+            }
+
+            return loanDtos;
+
+        }
         public async Task<IEnumerable<ReadLoanDto>> GetLoansByBook(Guid bookId)
         {
             var loans = await _unitOfWork.LoanRepository.GetAllAsync();
             loans = loans.Where(l => l.BookId == bookId);
 
-            return _mapper.Map<IEnumerable<ReadLoanDto>>(loans);
+            List<ReadLoanDto> loanDtos = new List<ReadLoanDto>();
+
+            foreach (var loan in loans)
+            {
+                var Dto = new ReadLoanDto()
+                {
+                    LoanId = loan.LoanId,
+                    LoanDate = loan.LoanDate,
+                    DueDate = loan.DueDate,
+                    ReturnDate = loan.ReturnDate,
+                    IsReturned = loan.IsReturned,
+                    BookTitle = loan.Book.Title,
+                    MemberName = loan.Member.FirstName,
+                };
+
+                loanDtos.Add(Dto);
+            }
+
+            return loanDtos;
         }
 
         public async Task AddLoan(CreateLoanDto createLoanDto)

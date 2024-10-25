@@ -3,6 +3,7 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "All Loans";
 }
+
 <h2> All Loans </h2>
 
 @if (Model != null && Model.Any())
@@ -32,14 +33,14 @@
                     <td>@loan?.BookTitle</td>
                     <td>@loan?.MemberName</td>
                     <td>
-                        @if (loan?.Penalty != null)
+                        @if (loan.Penalty != null)
                         {
                             <span>Penalty Amount: @loan?.Penalty.Amount</span> <!-- Adjust based on your penalty properties -->
                         }
                         else
                         {
                             <span>No Penalty</span>
-                        }
+                        } 
                     </td>
                     <td>
                         <a asp-action="EditLoan" asp-route-id="@loan?.LoanId" class="btn btn-warning">Edit</a>

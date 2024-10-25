@@ -2,14 +2,17 @@
 using Application.DAL.UnitOfWork;
 using Application.Shared;
 using AutoMapper;
+using AutoMapper.Execution;
 using System;
 using System.Collections.Generic;
+using System.Formats.Asn1;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.BLL
 {
+    /// no use for AutoMapper  (done)
     public class PenaltyService : IPenaltyService
     {
         private readonly IMapper _mapper;
@@ -26,19 +29,90 @@ namespace Application.BLL
             var penalties = await _unitOfWork.PenaltyRepository.GetAllAsync();
             // Filtering
             penalties = penalties.Where(p => !p.IsPaid && !p.IsDeleted);
-            return _mapper.Map<IEnumerable<ReadPenaltyDto>>(penalties);
+           
+            List<ReadPenaltyDto> PenaltyDtos = new List<ReadPenaltyDto>();
+           
+            foreach (var penalty in penalties) {
+
+                var Dto = new ReadPenaltyDto()
+                {
+                    PenaltyId = penalty.PenaltyId,
+                    Amount = penalty?.Amount ,
+                    IsPaid = penalty.IsPaid,
+                    LoanId = penalty.LoanId,
+                    MemberName = penalty.Member.FirstName
+                };
+
+                PenaltyDtos.Add(Dto);
+            }
+            return PenaltyDtos;
         }
 
         public async Task<IEnumerable<ReadPenaltyDto>> GetPenaltiesByMember(Guid memberId)
         {
             var penalties = await _unitOfWork.PenaltyRepository.GetPenaltyByMember(memberId);
-            return _mapper.Map<IEnumerable<ReadPenaltyDto>>(penalties);
+
+            List<ReadPenaltyDto> PenaltyDtos = new List<ReadPenaltyDto>();
+
+            foreach (var penalty in penalties)
+            {
+
+                var Dto = new ReadPenaltyDto()
+                {
+                    PenaltyId = penalty.PenaltyId,
+                    Amount = penalty?.Amount,
+                    IsPaid = penalty.IsPaid,
+                    LoanId = penalty.LoanId,
+                    MemberName = penalty.Member.FirstName
+                };
+
+                PenaltyDtos.Add(Dto);
+            }
+            return PenaltyDtos;
         }
 
+        public async Task<IEnumerable<ReadPenaltyDto>> GetPaidPenaltiesByMember(Guid MemberId)
+        {
+
+            var penalties = await _unitOfWork.PenaltyRepository.GetPenaltyByMember(MemberId);
+            // filter it
+            penalties = penalties.Where(p => p.IsPaid).ToList();    
+
+            List<ReadPenaltyDto> PenaltyDtos = new List<ReadPenaltyDto>();
+
+            foreach (var penalty in penalties)
+            {
+
+                var Dto = new ReadPenaltyDto()
+                {
+                    PenaltyId = penalty.PenaltyId,
+                    Amount = penalty?.Amount,
+                    IsPaid = penalty.IsPaid,
+                    LoanId = penalty.LoanId,
+                    MemberName = penalty.Member.FirstName
+                };
+
+                PenaltyDtos.Add(Dto);
+            }
+
+            return PenaltyDtos;
+
+        }
         public async Task<ReadPenaltyDto> GetPenaltyByLoan(Guid loanId)
         {
             var penalty = await _unitOfWork.PenaltyRepository.GetPenaltyByLoan(loanId);
-            return _mapper.Map<ReadPenaltyDto>(penalty);
+
+            var Dto = new ReadPenaltyDto()
+            {
+                PenaltyId = penalty.PenaltyId,
+                Amount = penalty?.Amount,
+                IsPaid = penalty.IsPaid,
+                LoanId = penalty.LoanId,
+                MemberName = penalty.Member.FirstName
+            };
+
+            return Dto;
+
         }
 
         public async Task AddPenalty(CreatePenaltyDto createPenaltyDto)

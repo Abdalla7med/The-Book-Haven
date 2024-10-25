@@ -8,6 +8,7 @@ namespace Application.Shared
 {
     public class ReadCategoryDto
     {
+        public Guid Id { set; get; }
         public string Name { set; get; }
         public List<string> Books { set; get; }
 

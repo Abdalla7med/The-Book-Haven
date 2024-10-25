@@ -1,6 +1,6 @@
-﻿using AutoMapper;
-using Application.DAL;
+﻿using Application.DAL;
 using Application.Shared;
+using AutoMapper;
 
 public class MappingProfile : Profile
 {
@@ -12,8 +12,7 @@ public class MappingProfile : Profile
         // Mapping from Book entity to ReadBookDto
         CreateMap<Book, ReadBookDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.BookId))
-            .ForMember(dest => dest.CategoryName, opt => opt.Ignore()) // Assuming CategoryName will be handled in logic layer
-            .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author != null ? $"{src.Author.FirstName} {src.Author.LastName}" : null));
+            .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author != null ? $"{src.Author.FirstName} " : null));
 
         // Mapping from CreateBookDto to Book entity
         CreateMap<CreateBookDto, Book>()
@@ -59,11 +58,7 @@ public class MappingProfile : Profile
         #region Loan mappings
         // Mapping from Loan entity to ReadLoanDto
         CreateMap<Loan, ReadLoanDto>()
-            .ForMember(dest => dest.LoanId, opt => opt.MapFrom(src => src.LoanId))
-            .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book != null ? src.Book.Title : string.Empty))
-            .ForMember(dest => dest.MemberName, opt => opt.MapFrom(src => src.Member != null ? $"{src.Member.FirstName} {src.Member.LastName}" : string.Empty))
-            .ForMember(dest => dest.Penalty, opt => opt.MapFrom(src => src.Penalty))
-            .ForMember(dest => dest.IsReturned, opt => opt.MapFrom(src => src.IsReturned));
+            .ReverseMap();
 
         // Mapping from CreateLoanDto to Loan entity
         CreateMap<CreateLoanDto, Loan>()
@@ -103,7 +98,6 @@ public class MappingProfile : Profile
         CreateMap<ApplicationUser, ReadUserDto>()
         .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id))
         .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
-        .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
         .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
         .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role))
         .ForMember(dest => dest.IsBlocked, opt => opt.MapFrom(src => src.IsBlocked))
@@ -116,7 +110,6 @@ public class MappingProfile : Profile
         CreateMap<CreateUserDto, ApplicationUser>()
             .ForMember(dest => dest.Id, opt => opt.Ignore()) // Id is auto-generated
             .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
-            .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email)) // Username is the same as Email in Identity
             .ForMember(dest => dest.PasswordHash, opt => opt.Ignore()) // Password hashing will be handled elsewhere
@@ -130,11 +123,9 @@ public class MappingProfile : Profile
         CreateMap<UpdateUserDto, ApplicationUser>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
-            .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email)) // Update username if email changes
             .ForMember(dest => dest.IsPremium, opt => opt.MapFrom(src => src.IsPremium))
-            .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.ImageURL))
             .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => src.IsDeleted))
             .ForMember(dest => dest.IsBlocked, opt => opt.MapFrom(src => src.IsBlocked));
 

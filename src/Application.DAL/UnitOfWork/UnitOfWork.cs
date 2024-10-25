@@ -28,11 +28,9 @@ namespace Application.DAL.UnitOfWork
             _context = context;
             BookRepository = new BookRepository(context);
             CategoryRepository = new CategoryRepository(context);
-            CategoryRepository = new CategoryRepository(context);
             LoanRepository = new LoanRepository(context);
             PenaltyRepository = new PenaltyRepository(context);
-           
-            UserRepository = new UserRepository(context, _userManager);   
+            UserRepository= new UserRepository(context, _userManager);   
         }
        
         public async Task<IDbContextTransaction> BeginTransactionAsync()

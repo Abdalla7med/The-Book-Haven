@@ -75,17 +75,19 @@ namespace Application.DAL.Context
                 .WithOne(l => l.Penalty)
                 .HasForeignKey<Penalty>(p => p.LoanId);
 
-            ///// Notification - User  ( Many-to-One) user can have  zero or many notification and notification is associated with only one user 
-            //modelBuilder.Entity<Notification>()
-            //    .HasOne(n => n.User)
-            //    .WithMany(u => u.Notifications)
-            //    .HasForeignKey(n => n.UserId);
-
-            /// Report - User ( Many-to-One) User can have zero or many reports and each report is associated with only one user 
-            //modelBuilder.Entity<Report>()
-            //    .HasOne(R => R.ReportUser)
-            //    .WithMany(U => U.Reports)
-            //    .HasForeignKey(R => R.ReportedById);
+            // Seed Categories
+            modelBuilder.Entity<Category>().HasData(
+                new Category { CategoryId = Guid.NewGuid(), Name = "Fiction", IsDeleted = false },
+                new Category { CategoryId = Guid.NewGuid(), Name = "Non-Fiction", IsDeleted = false },
+                new Category { CategoryId = Guid.NewGuid(), Name = "Science", IsDeleted = false },
+                new Category { CategoryId = Guid.NewGuid(), Name = "Technology", IsDeleted = false },
+                new Category { CategoryId = Guid.NewGuid(), Name = "History", IsDeleted = false },
+                new Category { CategoryId = Guid.NewGuid(), Name = "Biography", IsDeleted = false },
+                new Category { CategoryId = Guid.NewGuid(), Name = "Fantasy", IsDeleted = false },
+                new Category { CategoryId = Guid.NewGuid(), Name = "Mystery", IsDeleted = false },
+                new Category { CategoryId = Guid.NewGuid(), Name = "Romance", IsDeleted = false },
+                new Category { CategoryId = Guid.NewGuid(), Name = "Self-Help", IsDeleted = false }
+            );
 
             base.OnModelCreating(modelBuilder);
         }

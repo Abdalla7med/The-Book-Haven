@@ -8,5 +8,7 @@ namespace Application.Web.Controllers
         {
             return View();
         }
+
+        /// There'no Enity in the Views will be corresponding to loan just loan will created as service 
     }
 }
