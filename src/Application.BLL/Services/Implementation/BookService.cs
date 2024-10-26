@@ -33,7 +33,7 @@ namespace Application.BLL
         /// <param name="createBookDto"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task AddBook(CreateBookDto createBookDto)
+        public async Task <ApplicationResult>AddBook(CreateBookDto createBookDto)
         {
             // Get Category using its Id
           /*  var category = await _unitOfWork.CategoryRepository.GetByIdAsync(createBookDto.CategoryId);
@@ -51,14 +51,15 @@ namespace Application.BLL
             // Author existence validation
             if (author == null)
             {
-                throw new ArgumentException($"Author '{createBookDto.AuthorName}' Doesn't Exist");
+                return new ApplicationResult() { Succeeded = false, Errors = new List<string> { $"Author '{createBookDto.AuthorName}' Doesn't Exist" } };
             }
 
 
             // Publication year validation
             if (createBookDto.PublicationYear > DateTime.UtcNow.Year)
             {
-                throw new ArgumentException("Publication Year is Not Valid");
+                return new ApplicationResult() { Succeeded = false, Errors = new List<string> { "Publication Year is Not Valid" } };
+
             }
 
             var book = new Book
@@ -76,7 +77,10 @@ namespace Application.BLL
 
             // Add book and save changes
             await _unitOfWork.BookRepository.AddAsync(book);
+
             await _unitOfWork.CompleteAsync();
+
+            return new ApplicationResult() { Succeeded = true };
         }
 
         /// <summary>
@@ -86,8 +90,27 @@ namespace Application.BLL
         public async Task<IEnumerable<ReadBookDto>> AllBooks()
         {
             var books = await _unitOfWork.BookRepository.GetAllAsync();
-            // Using AutoMapper to map
-            return _mapper.Map<IEnumerable<ReadBookDto>>(books);
+            var bookDtos = new List<ReadBookDto>();
+
+            foreach (var book in books)
+            {
+                var dto = new ReadBookDto
+                {
+                    Id = book.BookId,
+                    Title = book.Title,
+                    CoverUrl = book.CoverUrl,
+                    ISBN = book.ISBN,
+                    PublicationYear = book.PublicationYear,
+                    AvailableCopies = book.AvailableCopies,
+                    AuthorName = book.Author?.FirstName,     // Assuming Author is a navigation property
+                    IsDeleted = book.IsDeleted
+                };
+
+                bookDtos.Add(dto);
+            }
+
+            return bookDtos;
+
         }
 
         public async Task<PaginatedList<ReadBookDto>> GetBooksAsync(string searchTerm, string category, int pageIndex, int pageSize)
@@ -105,15 +128,21 @@ namespace Application.BLL
                 query = query.Where(b => b.Category.Name == category);
             }
 
+           
             // Project to DTO (assuming you have a ReadBookDto class)
             var booksDtoQuery = query.Select(book => new ReadBookDto
             {
                 Id = book.BookId,
                 Title = book.Title,
-                AuthorName = book.Author.FirstName,
+                AuthorName = book.Author.FirstName ?? "NA" ,
                 AvailableCopies = book.AvailableCopies,
                 CoverUrl = book.CoverUrl
             });
+
+            //foreach(var query in booksDtoQuery)
+            //{
+
+            //}
 
             // Paginate the results using PaginatedList
             return await Task.FromResult(PaginatedList<ReadBookDto>.Create(booksDtoQuery, pageIndex, pageSize));
@@ -128,6 +157,7 @@ namespace Application.BLL
         public async Task DeleteBook(Guid bookId)
         {
             var book = await _unitOfWork.BookRepository.GetByIdAsync(bookId);
+
             if (book == null)
             {
                 throw new ArgumentException("Book Not Found");
@@ -163,7 +193,20 @@ namespace Application.BLL
 
             var AuthoredBooks = books.Where(b => b.AuthorId == authorId).ToList();
 
-            return _mapper.Map<IEnumerable<ReadBookDto>>(AuthoredBooks);
+            var AuthoredBooksDtos = new List<ReadBookDto>();
+            foreach (var book in AuthoredBooks) {
+                var Dto = new ReadBookDto()
+                {
+                    Id = book.BookId,
+                    Title = book.Title,
+                    AuthorName = book.Author.FirstName,
+                    AvailableCopies = book.AvailableCopies,
+                    CoverUrl = book.CoverUrl
+                };
+
+                AuthoredBooksDtos.Add(Dto);
+            }
+            return AuthoredBooksDtos;
 
         }
 
@@ -176,13 +219,7 @@ namespace Application.BLL
             // Apply filtering if search term is provided
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                books = books.Where(b => b.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
-            }
-
-            // Apply filtering if category is provided
-            if (!string.IsNullOrEmpty(category))
-            {
-                books = books.Where(b => b.Category.Name == category);
+                books = books.Where(b => b.Title.ToLower().Contains(searchTerm.ToLower()));
             }
 
             var booksDtoQuery = books.Select(book => new ReadBookDto
@@ -221,19 +258,17 @@ namespace Application.BLL
         /// </summary>
         /// <param name="updateBookDto"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentException"> the first to be handled through the catch block</exception>
-        /// <exception cref="InvalidOperationException">the second to be handled through the catch block</exception>
-        public async Task UpdateBook(UpdateBookDto updateBookDto)
+        public async Task<ApplicationResult> UpdateBook(UpdateBookDto updateBookDto)
         {
             var book = await _unitOfWork.BookRepository.GetByIdAsync(updateBookDto.BookId);
             if (book == null)
             {
-                throw new ArgumentException("Book Not Found");
+                return new ApplicationResult() { Succeeded = false, Errors = new List<string> { "Book Not Found" } };
             }
 
             if (book.IsDeleted)
             {
-                throw new InvalidOperationException("Cannot update a deleted book");
+                return new ApplicationResult() { Succeeded = false, Errors = new List<string> { "Cannot update a deleted book" } };
             }
 
             // Updating properties
@@ -243,6 +278,10 @@ namespace Application.BLL
 
             await _unitOfWork.BookRepository.UpdateAsync(book);
             await _unitOfWork.CompleteAsync();
+
+            return new ApplicationResult() { Succeeded = true };
+
+
         }
     }
 }

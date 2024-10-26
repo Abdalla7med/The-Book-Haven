@@ -13,6 +13,11 @@ namespace Application.DAL.Repositories
 
         public BookRepository(BookHavenContext _context): base(_context) { }
 
+        public override async Task<IEnumerable<Book>> GetAllAsync()
+        {
+            return await _dbset.Include(b => b.Author)
+                                .ToListAsync();
+        }
         public async Task<Book> GetBookByNameAsync(string BookTitle)
         {
             return await _dbset.Include(b => b.Author)

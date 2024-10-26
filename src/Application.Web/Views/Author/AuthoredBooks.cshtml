@@ -2,59 +2,29 @@
 
 <h2>Loan Books</h2>
 
-@* <!-- Filter Form -->
-<form method="get" action="/Book/LoanBooks" class="mb-4">
+<!-- Filter Form -->
+<form asp-action="AuthoredBooks" asp-controller="Author" method="get">
     <div class="form-group">
-        <input type="text" 
-                class="form-control"
-                name="searchTerm"
-               placeholder="Search by title" 
-               value="@Context.Request.Query["searchTerm"]"
-        />
+        <input type="text"
+               class="form-control"
+               name="searchTerm"
+               placeholder="Search by title or author"
+               value="@Context.Request.Query["searchTerm"]" />
     </div>
-
-    <div class="form-group">
-        <select class="form-control" name="category">
-
-            <option value="">All Categories</option>
-
-            @foreach (var category in ViewBag.Categories)
-            {
-                var isSelected = category == Context.Request.Query["category"] ? "selected" : "";
-
-                if (isSelected == "selected"){
-
-                    <option value="@category" selected>@category.</option>
-
-                }else{
-
-                    <option value="@category">@category</option>
-
-                }
-            }
-
-        </select>
-
-    </div>
-
-    <button type="submit" class="btn btn-primary">Filter</button>
-
+    <button type="submit" class="btn btn-primary">Search</button>
 </form>
 
- *@
 
-
- <!-- Book Cards Grid -->
+<!-- Book Cards Grid -->
 <div class="row">
     @foreach (var book in Model)
     {
         <div class="col-md-4 mb-4">
             <div class="card h-100">
                 <img src="@book.CoverUrl"
-                    class="card-img-top" 
-                    alt="Cover Image" 
-                    style="height: 200px; object-fit: cover;"
-                 />
+                     class="card-img-top"
+                     alt="Cover Image"
+                     style="height: 200px; object-fit: cover;" />
                 <div class="card-body">
                     <h5 class="card-title">@book.Title</h5>
                     <p class="card-text">
@@ -65,14 +35,11 @@
                         <span style="color:@(book.AvailableCopies > 0 ? "green" : "red")">
                             @(book.AvailableCopies > 0 ? "Available" : "Not Available")
                         </span>
-
                     </p>
-
                 </div>
                 <div class="card-footer text-center">
-
-                    @if (User.IsInRole("Admin") || User.IsInRole("Author")){
-
+                    @if (User.IsInRole("Admin") || User.IsInRole("Author"))
+                    {
                         <!-- Admin/Author can edit or delete -->
                         <form asp-controller="Book" asp-action="EditBook">
                             <input type="hidden" name="bookId" value="@book.Id" />
@@ -84,16 +51,17 @@
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
                     }
-                    else if (User.IsInRole("Member") && book.AvailableCopies > 0){
-
+                    else if (User.IsInRole("Member") && book.AvailableCopies > 0)
+                    {
                         <!-- Members can loan if available -->
-                        <form asp-action="LoanBook" asp-asp-controller="Book">
+                        <form asp-action="LoanBook" asp-controller="Book">
                             <input type="hidden" name="bookId" value="@book.Id" />
                             <button type="submit" class="btn btn-success">Loan Book</button>
                         </form>
                     }
-                    else{
-                        <button class="btn btn-secondary" disabled>Not Available</button> 
+                    else
+                    {
+                        <button class="btn btn-secondary" disabled>Not Available</button>
                     }
                 </div>
             </div>
@@ -103,12 +71,11 @@
 
 <!-- Pagination controls -->
 <nav aria-label="Page navigation">
-
     <ul class="pagination justify-content-center">
         @if (Model.HasPreviousPage)
         {
             <li class="page-item">
-                <a class="page-link" href="?page=@(Model.PageIndex - 1)&searchTerm=@Context.Request.Query["searchTerm"]&category=@Context.Request.Query["category"]" aria-label="Previous">
+                <a class="page-link" href="?page=@(Model.PageIndex - 1)&searchTerm=@Context.Request.Query["searchTerm"]" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
@@ -117,18 +84,17 @@
         @for (var i = 1; i <= Model.TotalPages; i++)
         {
             <li class="page-item @(i == Model.PageIndex ? "active" : "")">
-                <a class="page-link" href="?page=@i&searchTerm=@Context.Request.Query["searchTerm"]&category=@Context.Request.Query["category"]">@i</a>
+                <a class="page-link" href="?page=@i&searchTerm=@Context.Request.Query["searchTerm"]">@i</a>
             </li>
         }
 
         @if (Model.HasNextPage)
         {
             <li class="page-item">
-                <a class="page-link" href="?page=@(Model.PageIndex + 1)&searchTerm=@Context.Request.Query["searchTerm"]&category=@Context.Request.Query["category"]" aria-label="Next">
+                <a class="page-link" href="?page=@(Model.PageIndex + 1)&searchTerm=@Context.Request.Query["searchTerm"]" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
         }
-
     </ul>
 </nav>

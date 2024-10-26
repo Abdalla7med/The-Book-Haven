@@ -15,11 +15,11 @@ namespace Application.DAL.UnitOfWork
         private readonly BookHavenContext _context;
 
         private bool disposedValue = false;
-        public IBookRepository BookRepository { get; }
-        public ICategoryRepository CategoryRepository { get; }
-        public ILoanRepository LoanRepository { get; }
-        public IPenaltyRepository PenaltyRepository { get; }
-        public IUserRepository UserRepository { get; }
+        public BookRepository BookRepository { get; }
+        public CategoryRepository CategoryRepository { get; }
+        public LoanRepository LoanRepository { get; }
+        public PenaltyRepository PenaltyRepository { get; }
+        public UserRepository UserRepository { get; }
 
         //public IReportRepository ReportRepository { get; }
         //public INotificationRepository NotificationRepository { get; }

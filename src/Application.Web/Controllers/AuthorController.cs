@@ -44,17 +44,13 @@ namespace Application.Web.Controllers
 
         /// AuthorController: Dashboard, AuthoredBooks, PublishBook.
         [HttpGet]
-        public async Task<IActionResult> AuthoredBooks(string category, int page = 1, string searchTerm = "")
+        public async Task<IActionResult> AuthoredBooks(string category, int page = 1, string searchTerm ="")
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
             var pageIndex = 10;
 
             var AuthoredBooks = await _bookService.GetAuthoredBooksAsync(user.Id, searchTerm, category,page, pageIndex);
-
-            //var Categories = await _categoryService.AllCategories();
-           
-            //ViewBag.Categories = new SelectList(Categories, "CategoryId", "Name");
 
             return View(AuthoredBooks);
         }
@@ -86,30 +82,48 @@ namespace Application.Web.Controllers
                 return View(book);
             }
 
-            // Check if the cover image file is uploaded
+            // Check if the cover image was uploaded
             if (coverImage != null && coverImage.Length > 0)
             {
-                var fileName = Guid.NewGuid() + Path.GetExtension(coverImage.FileName);
+                // Get the root path of the wwwroot folder
+                var wwwRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
 
-                var savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/books", fileName);
+                // Create a unique file name for the uploaded cover image
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(coverImage.FileName);
 
-                using (var stream = new FileStream(savePath, FileMode.Create))
+                // Define the path to save the cover image
+                var filePath = Path.Combine(wwwRootPath, "images", "books", fileName);
+
+                // Ensure the directory exists
+                Directory.CreateDirectory(Path.Combine(wwwRootPath, "images", "books"));
+
+                // Save the cover image to wwwroot/images/books folder
+                using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await coverImage.CopyToAsync(stream);
                 }
 
-                book.CoverUrl = fileName;
+                // Set the CoverUrl in the model to use the relative path
+                book.CoverUrl = "/images/books/" + fileName;
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Please upload a cover image.");
+                return View(book);
+            }
 
-                await _bookService.AddBook(book);
+            // Add the book using the book service
+            var result = await _bookService.AddBook(book);
 
+            if (result.Succeeded)
+            {
+                // Redirect to Dashboard after successfully adding the book
                 return RedirectToAction("Dashboard");
             }
 
-            ModelState.AddModelError("", "An error occurred while adding the book.");
-
+            // Handle errors from adding the book
+            ModelState.AddModelError("Saving Book Error", result?.Errors?.ToString() ?? string.Empty);
             return View(book);
         }
-
-
     }
 }

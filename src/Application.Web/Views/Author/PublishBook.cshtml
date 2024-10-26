@@ -3,17 +3,32 @@
 @{
     Layout = "~/Views/Shared/_AuthorLayout.cshtml";
     ViewData["Title"] = "Publish Book";
+    bool isAuthor = User.IsInRole("Author"); // Check if the user is an author
 }
 
 <h2>Publish Book</h2>
 
+<!-- Validation Summary for displaying all errors -->
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <strong>@Html.ValidationSummary(true, "", new { @class = "text-danger" })</strong>
+    </div>
+}
+
 <form asp-action="PublishBook" method="post" enctype="multipart/form-data">
+    <!-- Hidden field for AuthorName if the user is an author -->
+    @if (isAuthor)
+    {
+        <input type="hidden" asp-for="AuthorName" value="@User.Identity.Name" />
+    }
+
     <div class="form-group">
         <label asp-for="Title"></label>
         <input asp-for="Title" class="form-control" />
         <span asp-validation-for="Title" class="text-danger"></span>
     </div>
-    
+
     <div class="form-group">
         <label asp-for="ISBN"></label>
         <input asp-for="ISBN" class="form-control" />
@@ -37,6 +52,7 @@
         <input type="file" name="coverImage" class="form-control" />
         <span asp-validation-for="CoverUrl" class="text-danger"></span>
     </div>
+
     <button type="submit" class="btn btn-primary">Publish Book</button>
 </form>
 
@@ -45,5 +61,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

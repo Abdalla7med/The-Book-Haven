@@ -10,11 +10,11 @@ namespace Application.DAL.UnitOfWork
 {
     public interface IUnitOfWork : IDisposable
     {
-       IBookRepository BookRepository { get; }
-       ICategoryRepository CategoryRepository { get; }
-       ILoanRepository LoanRepository { get; }
-       IPenaltyRepository PenaltyRepository { get; }
-       IUserRepository UserRepository { get; }
+       BookRepository BookRepository { get; }
+       CategoryRepository CategoryRepository { get; }
+       LoanRepository LoanRepository { get; }
+       PenaltyRepository PenaltyRepository { get; }
+       UserRepository UserRepository { get; }
        //IReportRepository ReportRepository { get; }
         
        //INotificationRepository NotificationRepository { get; }
