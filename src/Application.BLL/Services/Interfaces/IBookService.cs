@@ -14,7 +14,7 @@ namespace Application.BLL
         Task<PaginatedList<ReadBookDto>> GetBooksAsync(string searchTerm, string category, int page, int pageSize);
         Task<ReadBookDto> GetBookById(Guid bookId);
         Task<ApplicationResult> UpdateBook(UpdateBookDto updateBookDto);
-        Task DeleteBook(Guid bookId);   
+        Task<ApplicationResult> SoftDeleteBookAsync(Guid BookID);
         Task<bool> IsBookAvailable(Guid bookId); // Check for both deleted and available copies exists
         Task<IEnumerable<ReadBookDto>> GetBooksByAuthor(Guid authorId);
         Task<PaginatedList<ReadBookDto>> GetAuthoredBooksAsync(Guid authorId, string searchTerm, string category, int pageIndex, int pageSize);

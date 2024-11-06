@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Application.Shared.ReadLoanDto>
+
+
+@{
+
+    ViewData["Title"] = $"{ViewBag.UserName} Loans";
+    Layout = "~/Views/Shared/_MemberLayout.cshtml";
+}
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Book Title</th>
+                <th>Loan Date</th>
+                <th>Due Date</th>
+                <th>Status</th>
+               
+                <th>Return</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var loan in Model)
+            {
+                <tr>
+                    <td>@loan?.BookTitle</td>
+                    <td>@loan?.LoanDate.ToShortDateString()</td>
+                    <td>@loan?.DueDate.ToShortDateString()</td>
+                   
+                    <td>@loan?.MemberName</td>
+                    <td>
+                       
+                        
+                        <form asp-action="ReturnLoan" asp-route-id="@loan?.LoanId" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No loans available.</p>
+}
+
+d

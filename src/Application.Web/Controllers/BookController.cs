@@ -4,6 +4,8 @@ using Application.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Application.DAL;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
+using Application.Web.Models;
 namespace Application.Web.Controllers
 {
     public class BookController : Controller
@@ -11,12 +13,13 @@ namespace Application.Web.Controllers
         private readonly IBookService _bookService;
         private readonly ILogger<BookController> _logger;
         private readonly ICategoryService _categoryService;
-
-        public BookController(IBookService bookService, ILogger<BookController> logger, ICategoryService categoryService)
+        private readonly ILoanService _loanService;
+        public BookController(IBookService bookService, ILogger<BookController> logger, ICategoryService categoryService, ILoanService loanService)
         {
             _bookService = bookService;
             _logger = logger;
             _categoryService = categoryService;
+            _loanService = loanService;
         }
 
         [HttpGet]
@@ -28,18 +31,7 @@ namespace Application.Web.Controllers
             // Load all books if no filters are applied
             var paginatedBooks = await _bookService.GetBooksAsync(searchTerm, category, page, pageSize);
 
-            /// Cancle category for a while 
-            //var Categories = await _categoryService.AllCategories();
-           
-            //if (Categories == null || !Categories.Any())
-            //{
-            //    ModelState.AddModelError("", "No categories found.");
-            //    return View("BookIndex", paginatedBooks);
-            //}
-
-            //ViewBag.Categories = Categories != null && Categories.Any()
-            //    ? new SelectList(Categories, "CategoryId", "Name")
-            //    : new SelectList(Enumerable.Empty<Category>(), "CategoryId", "Name");
+            
 
             // Pass the paginated list to the view
             return View("BookIndex", paginatedBooks);
@@ -94,27 +86,37 @@ namespace Application.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(Guid id)
+        public async Task<IActionResult> EditBook(Guid id)
         {
             var book = await _bookService.GetBookById(id);
             if (book == null)
-                return NotFound(); /// inCase of book not found 
+            {
+                return NotFound();
+            }
 
-            return View(book);
+            // Map to UpdateBookDto if necessary
+            var updateBookDto = new UpdateBookDto
+            {
+                BookId = book.Id,
+                AvailableCopies = book.AvailableCopies ?? 0,
+           };
+
+            return View("Edit",updateBookDto);
         }
 
         [HttpPost]
-        /// Called from the ' Edit(Guid id) '
-        public async Task<IActionResult> Edit(UpdateBookDto book)
+        public async Task<IActionResult> EditBook(UpdateBookDto model)
         {
             if (ModelState.IsValid)
             {
-                await _bookService.UpdateBook(book);
+                await _bookService.UpdateBook(model);
                 return RedirectToAction("Index");
             }
-            return View(book);
+            return View("Edit",model);
         }
 
+
+        [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
             var book = await _bookService.GetBookById(id);
@@ -124,23 +126,93 @@ namespace Application.Web.Controllers
             return View(book);
         }
 
-        public async Task<IActionResult> Delete(Guid id)
+            // POST: Book/DeleteBook/{id}
+        [HttpPost]
+        [Authorize(Roles = "Admin,Author")] // Restrict access to Admin and Author roles
+        public async Task<IActionResult> DeleteBook(Guid id)
         {
+            var book = await _bookService.GetBookById(id);
+            if (book == null)
+            {
+                return NotFound(); // Return 404 if the book is not found
+            }
 
-            await _bookService.DeleteBook(id);
-            /// Return to index page 
+            var result = await _bookService.SoftDeleteBookAsync(id); // Assume DeleteBookAsync is the method to delete a book
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index"); // Redirect back to Index after deletion
+            }
 
-            return RedirectToAction("Index");
+            ModelState.AddModelError("", "An error occurred while deleting the book.");
+                return RedirectToAction("Index"); // Redirect to Index even if an error occurs
+            }
+
+        [Authorize(Roles = "Member")]
+        [HttpGet]
+        public async Task<IActionResult> LoanBook(Guid bookId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if(userId == null )
+            if(string.IsNullOrEmpty(userId))
+            {
+                // Add error to ModelState for not being logged in
+                ModelState.AddModelError("", "User is not logged in.");
+                return View("Index"); // Return view with the error message
+            }
+
+            // Try to parse the user ID to Guid
+            if (!Guid.TryParse(userId, out Guid userID))
+            {
+                // Add error to ModelState for invalid GUID format
+                ModelState.AddModelError("", "Invalid user ID format.");
+                return View("Index"); // Return view with the error message
+            }
+
+            var Book = await _bookService.GetBookById(bookId);
+            if (Book == null || Book.AvailableCopies < 1)
+            {
+                ModelState.AddModelError("", "No Available Books to be Loaned");
+                return View("Index");
+            }
+
+
+            CreateLoanViewModel model = new()
+            {
+                Book = Book,
+                MemberId = userID
+
+            };
+
+            return View("LoanBook", model);
         }
 
-        // POST: Book/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [Authorize(Roles = "Admin,Author")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        [Authorize(Roles ="Member")]
+        [HttpPost]
+        public async Task<IActionResult> LoanBook(CreateLoanViewModel model)
         {
-            await _bookService.DeleteBook(id);
-            return RedirectToAction(nameof(Index));
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", ModelState.ValidationState.ToString());
+                return View("LoanBook",model);
+            }
+
+            CreateLoanDto Dto = new CreateLoanDto()
+            {
+                BookId = model.Book.Id,
+                MemberId = model.MemberId,
+                DueDate = model.DueDate,
+                LoanDate = model.LoanDate 
+            };
+            var Result = await _loanService.AddLoan(Dto);
+            if (Result.Succeeded)
+            {
+                return View("Index");
+            }
+
+            ModelState.AddModelError("", "An error occurred while creating the loan.");
+            return View("LoanBook", model); // Return to the form if an error occurs
+
         }
     }
 }
+

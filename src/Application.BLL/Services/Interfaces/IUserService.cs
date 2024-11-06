@@ -17,6 +17,7 @@ namespace Application.BLL
         Task<ApplicationResult> SoftDeleteUserAsync(Guid userId);
         Task<ApplicationResult> RegisterUserAsync(CreateUserDto registerUserDto);
         Task<ApplicationResult> LoginUserAsync(string Email, string Password);
+        Task<IEnumerable<ReadUserDto>> GetUsersByRoleAsync(string role);
         Task SignOutAsync();
     }
 }

@@ -43,8 +43,12 @@
                         } 
                     </td>
                     <td>
-                        <a asp-action="EditLoan" asp-route-id="@loan?.LoanId" class="btn btn-warning">Edit</a>
-                        <form asp-action="DeleteLoan" asp-route-id="@loan?.LoanId" method="post" style="display:inline;">
+                        <form asp-action="EditLoan" asp-route-id="@loan?.LoanId" method="get" style="display:inline">
+                            <button type="submit" calss="btn btn-primary">Edit</button>
+                        </form>
+                        <form asp-action="DeleteLoan" asp-route-id="@loan?.LoanId" method="post" style="display:inline;" 
+                        onsubmit="return confirm('Are you sure you want to delete this book?');">
+                            ">
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
                     </td>
@@ -57,7 +61,3 @@ else
 {
     <p>No loans available.</p>
 }
-
-<div>
-    <a asp-action="CreateLoan" class="btn btn-primary">Create New Loan</a>
-</div>

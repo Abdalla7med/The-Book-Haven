@@ -1,0 +1,48 @@
+﻿@model CreateLoanViewModel;
+
+@{
+    ViewData["Title"] = "Loan Book";
+    Layout = "~/Views/Shared/_MemberLayout.cshtml";
+}
+
+<div class="container my-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5>Loan Book</h5>
+        </div>
+        <div class="card-body">
+            <!-- Book Information Card -->
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="@Model.Book.CoverUrl" class="card-img-top" alt="Cover Image" style="height: 200px; object-fit: cover;" />
+                </div>
+                <div class="col-md-8">
+                    <h3>@Model.Book.Title</h3>
+                    <p><strong>Author:</strong> @Model.Book.AuthorName</p>
+                    <p><strong>Available Copies:</strong> @Model.Book.AvailableCopies</p>
+                </div>
+            </div>
+            <hr />
+            <!-- Loan Form -->
+            <form asp-action="LoanBook" method="post">
+                <!-- Hidden fields for MemberId and BookId -->
+                <input type="hidden" asp-for="@Model.MemberId" />
+                <input type="hidden" asp-for="@Model.Book.Id" />
+
+                <!-- Due Date Input Field with Validation -->
+                <div class="form-group">
+                    <label asp-for="@Model.DueDate">Due Date</label>
+                    <input asp-for="@Model.DueDate" type="date" class="form-control" />
+                    <span asp-validation-for="DueDate" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3">Loan Book</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Validation Scripts -->
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

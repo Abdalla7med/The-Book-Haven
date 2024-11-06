@@ -32,8 +32,19 @@
                         }
                     </td>
                     <td>
-                        <a href="@Url.Action("EditUser", "Admin", new { id = member.UserId })" class="btn btn-warning">Edit</a>
-                        <form asp-action="DeleteUser" asp-route-id="@member.UserId" method="post" style="display:inline;">
+                        <form asp-controller="Admin" asp-action="EditUser" method="get" style="display:inline">
+                            <!-- Hidden field for the ID -->
+                            <input type="hidden" name="id" value="@member.UserId" />
+                            <button type="submit" class="btn btn-primary">Edit</button>
+                        </form>
+
+
+                        <form asp-action="DeleteUser" 
+                              asp-controller="Admin" method="post" 
+                              onsubmit="return confirm('Are you sure you want to delete this book?');" 
+                              style="display:inline"
+                              >
+                            <input type="hidden" name="id" value="@member.UserId" >
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
                     </td>
@@ -50,5 +61,5 @@
 </table>
 
 <div>
-    <a asp-action="CreateUser" class="btn btn-primary">Add New Member</a> <!-- Adjust link as needed -->
+    <a asp-action="CreateUser" asp-controller="Admin" class="btn btn-primary">Add New Member</a> <!-- Adjust link as needed -->
 </div>

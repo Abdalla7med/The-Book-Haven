@@ -164,13 +164,14 @@ namespace Application.Web.Controllers
         // POST: Admin/DeleteBook/{id}
         [HttpPost]
         [ValidateAntiForgeryToken] // To protect against CSRF attacks
-        public IActionResult DeleteBook(Guid id)
+        public async Task<IActionResult> DeleteBook(Guid id)
         {
-            var result = _bookService.DeleteBook(id); // Call the service to delete the book
+            var result = await _bookService.SoftDeleteBookAsync(id); // Call the service to delete the book
             return RedirectToAction("AllBooks");
         }
 
         // GET: Admin/EditLoan/{id}
+        [HttpGet]
         public async Task<IActionResult> EditLoan(Guid id)
         {
             var loan = await _loanService.GetLoanById(id); // Fetch the loan details using the service

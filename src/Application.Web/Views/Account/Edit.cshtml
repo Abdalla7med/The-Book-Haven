@@ -14,24 +14,26 @@
     </div>
 }
 
-<form asp-action="EditProfile" enctype="multipart/form-data" method="post">
+@using (Html.BeginForm("EditProfile", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
     <!-- Hidden field for the Id -->
-    <input type="hidden" asp-for="Id" />
+    @Html.HiddenFor(model => model.Id)
 
     <div class="form-group">
-        <label asp-for="FirstName"></label>
-        <input asp-for="FirstName" class="form-control" />
-        <span asp-validation-for="FirstName" class="text-danger"></span>
+        @Html.LabelFor(model => model.FirstName, "First Name")
+        @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
     </div>
 
     <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+        @Html.LabelFor(model => model.Email, "Email")
+        @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
     </div>
 
     <button type="submit" class="btn btn-primary">Save Changes</button>
-</form>
+    @Html.ActionLink("Cancel", "Index", "Home", null, new { @class = "btn btn-secondary" })
+}
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

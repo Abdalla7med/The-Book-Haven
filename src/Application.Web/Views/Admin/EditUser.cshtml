@@ -1,44 +1,39 @@
-﻿@model Application.Shared.UpdateUserDto // Adjust the namespace accordingly
+﻿@model Application.Shared.UpdateUserDto
+
+@{
+    ViewData["Title"] = "Edit User";
+}
 
 <h2>Edit User</h2>
 
-<form asp-action="EditUser" method="post">
-    <div class="form-group">
-        <label asp-for="FirstName" class="control-label"></label>
-        <input asp-for="FirstName" class="form-control" />
-        <span asp-validation-for="FirstName" class="text-danger"></span>
+<!-- Display validation summary if there are any errors -->
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <strong>@Html.ValidationSummary(true, "", new { @class = "text-danger" })</strong>
     </div>
-    
+}
+
+@using (Html.BeginForm("EditUser", "Admin", FormMethod.Post))
+{
+    <!-- Hidden field for the Id -->
+    @Html.HiddenFor(model => model.Id)
+
     <div class="form-group">
-        <label asp-for="Email" class="control-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+        @Html.LabelFor(model => model.FirstName, "First Name")
+        @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
     </div>
 
     <div class="form-group">
-        <label asp-for="IsPremium" class="control-label"></label>
-        <input asp-for="IsPremium" type="checkbox" />
-        <span asp-validation-for="IsPremium" class="text-danger"></span>
+        @Html.LabelFor(model => model.Email, "Email")
+        @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
     </div>
-    <div class="form-group">
-        <label asp-for="IsBlocked" class="control-label"></label>
-        <input asp-for="IsBlocked" type="checkbox" />
-        <span asp-validation-for="IsBlocked" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="IsDeleted" class="control-label"></label>
-        <input asp-for="IsDeleted" type="checkbox" />
-        <span asp-validation-for="IsDeleted" class="text-danger"></span>
-    </div>
-    <input type="hidden" asp-for="Id" />
-    <div>
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a asp-action="AllMembers" class="btn btn-secondary">Cancel</a>
-    </div>
-</form>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    @Html.ActionLink("Cancel", "AllMembers", "Admin", null, new { @class = "btn btn-secondary" })
+}
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

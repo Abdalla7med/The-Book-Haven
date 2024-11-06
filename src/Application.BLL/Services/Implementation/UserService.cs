@@ -157,8 +157,6 @@ public class UserService : IUserService
 
         return new ApplicationResult { Succeeded = true, Data = result };
     }
-
-    // Get User Info
     public async Task<ReadUserDto> GetUserByIdAsync(Guid userId)
     {
         var user = await _userManager.FindByIdAsync(userId.ToString());
@@ -193,20 +191,23 @@ public class UserService : IUserService
         }
         /// Mapp manually 
         List<ReadUserDto> UserDtos = new List<ReadUserDto>();
+
         foreach(var user in  users)
         {
-            var Dto = new ReadUserDto()
+            if (!user.IsDeleted)
             {
-                UserId = user.Id,
-                FirstName = user.FirstName,
-                Email = user.Email, 
-                Role = user.Role,
-                IsBlocked= user.IsBlocked,
-                ImageUrl= user.ImageUrl,
-                IsDeleted = user.IsDeleted,
-                IsPremium = user.IsPremium
-            };
-            UserDtos.Add(Dto);
+                var Dto = new ReadUserDto()
+                {
+                    UserId = user.Id,
+                    FirstName = user.FirstName,
+                    Email = user.Email,
+                    Role = user.Role,
+                    IsBlocked = user.IsBlocked,
+                    ImageUrl = user.ImageUrl,
+                    IsPremium = user.IsPremium
+                };
+                UserDtos.Add(Dto);
+            }
 
         }
 
@@ -256,7 +257,8 @@ public class UserService : IUserService
     }
 
     /// <summary>
-    /// Create User and Return it, For Admin Create User and Bulk Creation 
+    /// Create User and Return it, For Admin Create User and Bulk Creation, and if there's any need to get user after creating it 
+    /// for auto login purpose (not done using this way)
     /// </summary>
     /// <param name="userDto"></param>
     /// <returns></returns>

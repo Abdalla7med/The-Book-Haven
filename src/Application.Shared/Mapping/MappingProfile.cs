@@ -24,9 +24,7 @@ public class MappingProfile : Profile
         // Mapping from UpdateBookDto to Book entity
         CreateMap<UpdateBookDto, Book>()
             .ForMember(dest => dest.BookId, opt => opt.MapFrom(src => src.BookId))
-            .ForMember(dest => dest.AvailableCopies, opt => opt.MapFrom(src => src.AvailableCopies))
-            .ForMember(dest => dest.CoverUrl, opt => opt.MapFrom(src => src.CoverUrl))
-            .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => src.IsDeleted));
+            .ForMember(dest => dest.AvailableCopies, opt => opt.MapFrom(src => src.AvailableCopies));
         #endregion
 
         #region Penalty mappings

@@ -94,25 +94,37 @@ namespace Application.BLL
 
             foreach (var book in books)
             {
-                var dto = new ReadBookDto
+                if (!book.IsDeleted)
                 {
-                    Id = book.BookId,
-                    Title = book.Title,
-                    CoverUrl = book.CoverUrl,
-                    ISBN = book.ISBN,
-                    PublicationYear = book.PublicationYear,
-                    AvailableCopies = book.AvailableCopies,
-                    AuthorName = book.Author?.FirstName,     // Assuming Author is a navigation property
-                    IsDeleted = book.IsDeleted
-                };
+                    var dto = new ReadBookDto
+                    {
+                        Id = book.BookId,
+                        Title = book.Title,
+                        CoverUrl = book.CoverUrl,
+                        ISBN = book.ISBN,
+                        PublicationYear = book.PublicationYear,
+                        AvailableCopies = book.AvailableCopies,
+                        AuthorName = book.Author?.FirstName,     // Assuming Author is a navigation property
+                        IsDeleted = book.IsDeleted
+                    };
 
-                bookDtos.Add(dto);
+
+                    bookDtos.Add(dto);
+                }
             }
 
             return bookDtos;
 
         }
 
+        /// <summary>
+        ///  Get Books in Form of Paginated List 
+        /// </summary>
+        /// <param name="searchTerm"></param>
+        /// <param name="category"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         public async Task<PaginatedList<ReadBookDto>> GetBooksAsync(string searchTerm, string category, int pageIndex, int pageSize)
         {
             var query = _unitOfWork.BookRepository.GetAllAsQueryable();
@@ -128,47 +140,33 @@ namespace Application.BLL
                 query = query.Where(b => b.Category.Name == category);
             }
 
-           
-            // Project to DTO (assuming you have a ReadBookDto class)
-            var booksDtoQuery = query.Select(book => new ReadBookDto
+            List<ReadBookDto> BookDtos= new List<ReadBookDto>();
+            foreach(var q in query)
             {
-                Id = book.BookId,
-                Title = book.Title,
-                AuthorName = book.Author.FirstName ?? "NA" ,
-                AvailableCopies = book.AvailableCopies,
-                CoverUrl = book.CoverUrl
-            });
+                if(!q.IsDeleted)
+                {
+                    var dto = new ReadBookDto
+                    {
+                        Id = q.BookId,
+                        Title = q.Title,
+                        CoverUrl = q.CoverUrl,
+                        ISBN = q.ISBN,
+                        PublicationYear = q.PublicationYear,
+                        AvailableCopies = q.AvailableCopies,
+                        AuthorName = q.Author?.FirstName,     // Assuming Author is a navigation property
+                        IsDeleted = q.IsDeleted
+                    };
 
-            //foreach(var query in booksDtoQuery)
-            //{
 
-            //}
-
-            // Paginate the results using PaginatedList
-            return await Task.FromResult(PaginatedList<ReadBookDto>.Create(booksDtoQuery, pageIndex, pageSize));
-        }
-
-        /// <summary>
-        /// Delete a book using Soft Delete 
-        /// </summary>
-        /// <param name="bookId"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        public async Task DeleteBook(Guid bookId)
-        {
-            var book = await _unitOfWork.BookRepository.GetByIdAsync(bookId);
-
-            if (book == null)
-            {
-                throw new ArgumentException("Book Not Found");
+                    BookDtos.Add(dto);
+                }
             }
 
-            // Soft delete by marking the book as deleted
-            book.IsDeleted = true;
-            await _unitOfWork.BookRepository.UpdateAsync(book);
-            await _unitOfWork.CompleteAsync();
+            // Paginate the results using PaginatedList
+            return await Task.FromResult(PaginatedList<ReadBookDto>.Create(BookDtos.AsQueryable(), pageIndex, pageSize));
         }
 
+     
         /// <summary>
         /// Search For book by it's id 
         /// </summary>
@@ -182,9 +180,16 @@ namespace Application.BLL
             {
                 throw new ArgumentException("Book Not Found");
             }
-
+            var Dto = new ReadBookDto()
+            {
+                Id = book.BookId,
+                Title = book.Title,
+                AuthorName = book.Author.FirstName,
+                AvailableCopies = book.AvailableCopies,
+                CoverUrl = book.CoverUrl
+            };
             // Using AutoMapper to map to ReadBookDto
-            return _mapper.Map<ReadBookDto>(book);
+            return Dto;
         }
 
         public async Task<IEnumerable<ReadBookDto>> GetBooksByAuthor(Guid authorId)
@@ -207,9 +212,7 @@ namespace Application.BLL
                 AuthoredBooksDtos.Add(Dto);
             }
             return AuthoredBooksDtos;
-
         }
-
         public async Task<PaginatedList<ReadBookDto>> GetAuthoredBooksAsync(Guid authorId, string searchTerm, string category, int pageIndex, int pageSize)
         {
             var books = _unitOfWork.BookRepository.GetAllAsQueryable();
@@ -271,9 +274,7 @@ namespace Application.BLL
                 return new ApplicationResult() { Succeeded = false, Errors = new List<string> { "Cannot update a deleted book" } };
             }
 
-            // Updating properties
-            book.IsDeleted = updateBookDto.IsDeleted;
-            book.CoverUrl = updateBookDto.CoverUrl; // Allow cover URL change
+           
             book.AvailableCopies = updateBookDto.AvailableCopies;
 
             await _unitOfWork.BookRepository.UpdateAsync(book);
@@ -281,6 +282,21 @@ namespace Application.BLL
 
             return new ApplicationResult() { Succeeded = true };
 
+
+        }
+
+        public async Task<ApplicationResult> SoftDeleteBookAsync(Guid BookID)
+        {
+            var book = await _unitOfWork.BookRepository.GetByIdAsync(BookID);
+            
+            if(book== null)
+                return new ApplicationResult() { Succeeded = false, Errors = new List<string>() { "Book not founded" } };
+
+            book.IsDeleted = true;
+
+            await _unitOfWork.BookRepository.UpdateAsync(book);
+            await _unitOfWork.CompleteAsync();
+            return new ApplicationResult() { Succeeded = true };
 
         }
     }

@@ -139,33 +139,48 @@ namespace Application.BLL
             return loanDtos;
         }
 
-        public async Task AddLoan(CreateLoanDto createLoanDto)
+        public async Task<ApplicationResult> AddLoan(CreateLoanDto createLoanDto)
         {
             using (var transaction = await _unitOfWork.BeginTransactionAsync())
             {
                 // Fetch user and book
                 var user = await _unitOfWork.UserRepository.GetByIdAsync(createLoanDto.MemberId);
                 if (user == null)
-                    throw new ArgumentException("Invalid member credentials");
+                {
+                    return new ApplicationResult
+                    {
+                        Succeeded = false,
+                        Errors = new List<string> { "Member doesn't exist." }
+                    };
+                }
 
                 var book = await _unitOfWork.BookRepository.GetByIdAsync(createLoanDto.BookId);
                 if (book == null || book.IsDeleted || book.AvailableCopies < 1)
-                    throw new ArgumentException("Book not available");
+                {
+                    return new ApplicationResult
+                    {
+                        Succeeded = false,
+                        Errors = new List<string> { "Book not available." }
+                    };
+                }
+
+                // Validate or calculate DueDate
+                DateTime dueDate = createLoanDto.DueDate != DateTime.MinValue
+                    ? createLoanDto.DueDate
+                    : DateTime.UtcNow.AddDays(14); // Default loan period, if needed
 
                 // Create loan entity
                 var loan = new Loan
                 {
-                    Book = book,
-                    Member = user,
                     BookId = book.BookId,
                     MemberId = user.Id,
-                    DueDate = DateTime.UtcNow.AddDays(createLoanDto.DueDate.Day),
+                    DueDate = dueDate,
+                    LoanDate = DateTime.UtcNow,
                     IsDeleted = false,
-                    IsReturned = false,
-                    LoanDate = DateTime.UtcNow
+                    IsReturned = false
                 };
 
-                // Decrement available copies
+                // Decrement available copies and update
                 book.AvailableCopies -= 1;
                 await _unitOfWork.BookRepository.UpdateAsync(book);
 
@@ -177,7 +192,11 @@ namespace Application.BLL
 
                 // Commit transaction
                 await transaction.CommitAsync();
+
+                return new ApplicationResult { Succeeded = true };
             }
+
+            /// there's not a valid place to add return statement 
         }
 
         public async Task ReturnLoan(Guid loanId)

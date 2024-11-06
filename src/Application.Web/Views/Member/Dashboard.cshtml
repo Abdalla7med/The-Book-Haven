@@ -1,8 +1,46 @@
 ﻿
 @{
-    ViewData["Title"] = "LMS - Member Dashboard";
+    ViewData["Title"] = $"{ViewBag.UserName} Dashboard";
     Layout = "~/Views/Shared/_MemberLayout.cshtml";
 }
 
-<h2>Member Dashboard</h2>
-<p>Welcome, @User?.Identity?.Name!</p>
+<p>Welcome, @User?.Identity?.Name</p>
+
+<!-- A set of Cards to manage entities in The System by admin-->
+
+<div class="row">
+
+    <!-- Books -->
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Explore Books</h5>
+                <p class="card-text">View, edit, and delete books in the system.</p>
+                <a href="@Url.Action("Index", "Book")" class="btn btn-primary"> Books</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loans -->
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Your Loans</h5>
+                <p class="card-text">View books you've loaned.</p>
+                <a href="@Url.Action("MyLoans", "Member")" class="btn btn-primary">My Loans</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Penalties -->
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Your Penalties</h5>
+                <p class="card-text">View and Oay penalties.</p>
+                <a href="@Url.Action("MyPenalties", "Admin")" class="btn btn-primary">My Penalties</a>
+            </div>
+        </div>
+    </div>
+
+</div>

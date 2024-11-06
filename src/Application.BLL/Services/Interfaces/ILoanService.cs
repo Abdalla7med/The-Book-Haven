@@ -14,7 +14,7 @@ namespace Application.BLL
         /// </summary>
         /// <param name="createLoanDto"></param>
         /// <returns></returns>
-        Task AddLoan(CreateLoanDto createLoanDto);
+        Task<ApplicationResult> AddLoan(CreateLoanDto createLoanDto);
         /// <summary>
         ///  Getting all loans in the database 
         /// </summary>

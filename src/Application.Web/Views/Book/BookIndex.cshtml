@@ -39,20 +39,24 @@ else
                 <div class="card-footer text-center">
                     @if (User.IsInRole("Admin") || User.IsInRole("Author"))
                     {
-                        <!-- Admin/Author can edit or delete -->
-                        <form method="post" action="/Book/EditBook">
-                            <input type="hidden" name="bookId" value="@book.Id" />
+                        <!-- Edit Book Form - Uses GET method -->
+                        <form asp-controller="Book" asp-action="EditBook" method="get">
+                            <input type="hidden" name="id" value="@book.Id" />
                             <button type="submit" class="btn btn-primary">Edit</button>
                         </form>
-                        <form method="post" action="/Book/DeleteBook">
-                            <input type="hidden" name="bookId" value="@book.Id" />
+
+                        <!-- Delete Book Form - Uses POST method for safety -->
+                        <form asp-controller="Book" asp-action="DeleteBook" method="post" 
+                              onsubmit="return confirm('Are you sure you want to delete this book?');">
+                            <input type="hidden" name="id" value="@book.Id" />
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
+
                     }
                     else if (User.IsInRole("Member") && book.AvailableCopies > 0)
                     {
                         <!-- Members can loan if available -->
-                        <form method="post" action="/Book/LoanBook">
+                        <form asp-controller="Book" asp-action="LoanBook" method="post" >
                             <input type="hidden" name="bookId" value="@book.Id" />
                             <button type="submit" class="btn btn-success">Loan Book</button>
                         </form>
@@ -64,7 +68,6 @@ else
                 </div>
             </div>
         </div>
-    }
     }
 </div>
 

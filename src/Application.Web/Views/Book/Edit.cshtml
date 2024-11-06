@@ -1,0 +1,22 @@
+﻿@model Application.Shared.UpdateBookDto;
+
+@{
+    ViewData["Title"] = "Edit Book";
+}
+
+<h2>Edit Book</h2>
+
+@using (Html.BeginForm("EditBook", "Book", FormMethod.Post))
+{
+    @Html.HiddenFor(model => model.BookId)
+    <div class="form-group">
+        @Html.LabelFor(model => model.AvailableCopies, "Available Copies")
+        @Html.TextBoxFor(model => model.AvailableCopies, new { @class = "form-control", type = "number" })
+        @Html.ValidationMessageFor(model => model.AvailableCopies)
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-success">Save Changes</button>
+        @Html.ActionLink("Cancel", "Index", "Book", null, new { @class = "btn btn-secondary" })
+    </div>
+}
