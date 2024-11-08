@@ -16,7 +16,6 @@
                 <th>Loan Date</th>
                 <th>Due Date</th>
                 <th>Status</th>
-               
                 <th>Return</th>
             </tr>
         </thead>
@@ -27,14 +26,20 @@
                     <td>@loan?.BookTitle</td>
                     <td>@loan?.LoanDate.ToShortDateString()</td>
                     <td>@loan?.DueDate.ToShortDateString()</td>
-                   
-                    <td>@loan?.MemberName</td>
                     <td>
-                       
-                        
-                        <form asp-action="ReturnLoan" asp-route-id="@loan?.LoanId" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-danger">Delete</button>
-
+                        @if (loan.DueDate < DateTime.UtcNow)
+                        {
+                            <span class="text-danger">Late</span>
+                        }
+                        else
+                        {
+                            <span class="text-success">On Time</span>
+                        }
+                    </td>
+                    <td>
+                        <form asp-controller="Loan" asp-action="ReturnLoan" method="post" style="display:inline;">
+                            <input type="hidden" name="LoanId" value="@loan.LoanId" />
+                            <button type="submit" class="btn btn-Success">Return</button>
                         </form>
                     </td>
                 </tr>
@@ -46,5 +51,3 @@ else
 {
     <p>No loans available.</p>
 }
-
-d

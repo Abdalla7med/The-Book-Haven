@@ -46,6 +46,6 @@ namespace Application.BLL
         /// </summary>
         /// <param name="LoanId"></param>
         /// <returns></returns>
-        Task ReturnLoan(Guid LoanId);
+        Task<ApplicationResult> ReturnLoan(Guid LoanId);
     }
 }

@@ -56,14 +56,10 @@ else
                     else if (User.IsInRole("Member") && book.AvailableCopies > 0)
                     {
                         <!-- Members can loan if available -->
-                        <form asp-controller="Book" asp-action="LoanBook" method="post" >
+                        <form asp-controller="Book" asp-action="LoanBook" method="get" >
                             <input type="hidden" name="bookId" value="@book.Id" />
                             <button type="submit" class="btn btn-success">Loan Book</button>
                         </form>
-                    }
-                    else
-                    {
-                        <button class="btn btn-secondary" disabled>Not Available</button>
                     }
                 </div>
             </div>

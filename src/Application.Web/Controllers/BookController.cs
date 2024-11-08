@@ -157,22 +157,22 @@ namespace Application.Web.Controllers
             {
                 // Add error to ModelState for not being logged in
                 ModelState.AddModelError("", "User is not logged in.");
-                return View("Index"); // Return view with the error message
-            }
+                    return RedirectToAction(actionName: "Index", controllerName: "Book");
+                }
 
             // Try to parse the user ID to Guid
             if (!Guid.TryParse(userId, out Guid userID))
             {
                 // Add error to ModelState for invalid GUID format
                 ModelState.AddModelError("", "Invalid user ID format.");
-                return View("Index"); // Return view with the error message
+                return RedirectToAction(actionName: "Index", controllerName: "Book");
             }
 
             var Book = await _bookService.GetBookById(bookId);
             if (Book == null || Book.AvailableCopies < 1)
             {
                 ModelState.AddModelError("", "No Available Books to be Loaned");
-                return View("Index");
+                return RedirectToAction(actionName: "Index", controllerName: "Book");
             }
 
 
@@ -206,7 +206,7 @@ namespace Application.Web.Controllers
             var Result = await _loanService.AddLoan(Dto);
             if (Result.Succeeded)
             {
-                return View("Index");
+                return RedirectToAction(actionName:"Index", controllerName:"Book");
             }
 
             ModelState.AddModelError("", "An error occurred while creating the loan.");

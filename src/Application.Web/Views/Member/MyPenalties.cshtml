@@ -1,32 +1,34 @@
 ﻿@model IEnumerable<Application.Shared.ReadPenaltyDto> // Adjust the namespace accordingly
 @{
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "All Penalties";
+    Layout = "~/Views/Shared/_MemberLayout.cshtml";
+    ViewData["Title"] = $"{ViewBag.UserName} Penalties";
 }
 <h2>All Penalties</h2>
+
      @if (Model != null && Model.Any())
-    {
+     {
         <table class="table">
             <thead>
                 <tr>
-                    <th>Penalty ID</th>
                     <th>Amount</th>
-                    <th>Is Paid</th>
-                    <th>Member Name</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
-       
-                    @foreach (var penalty in Model)
+
+                   @foreach (var penalty in Model)
                     {
                         <tr>
-                            <td>@penalty.PenaltyId</td>
                             <td>@penalty.Amount.ToString()</td>
-                            <td>@(penalty.IsPaid ? "Yes" : "No")</td>
-                            <td>@penalty.MemberName</td>
+                            <td>@(penalty.IsPaid ? "Paid" : "Not Paid")</td>
+                            <td>
+                                <form asp-controller="Penalty" asp-action="Pay" method="post">
+                                    <input type="hidden" name="PenaltyID" value="@penalty.PenaltyId"/>
+                                    <button type="submit" class="btn btn-Success">Pay</button>
+                                </form>
+                            </td>
                         </tr>
                     }
-       
             </tbody>
         </table>
     }

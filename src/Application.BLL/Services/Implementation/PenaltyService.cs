@@ -146,16 +146,28 @@ namespace Application.BLL
             }
         }
 
-        public async Task PayPenalty(Guid penaltyId, decimal amount)
+        public async Task<ApplicationResult> PayPenalty(Guid penaltyId, decimal amount)
         {
             using (var transaction = await _unitOfWork.BeginTransactionAsync())
             {
                 var penalty = await _unitOfWork.PenaltyRepository.GetByIdAsync(penaltyId);
                 if (penalty == null || penalty.IsPaid)
-                    throw new InvalidOperationException("No penalty to pay or penalty is already paid.");
+                   return  new ApplicationResult() { 
+                            Succeeded = false, 
+                            Errors = new List<string>
+                                    {
+                                        "No penalty to pay or penalty is already paid." 
+                                    } 
+                   };
 
                 if (amount < penalty.Amount)
-                    throw new ArgumentException($"Payment is less than the penalty amount. Required: {penalty.Amount:C}");
+                  return new ApplicationResult() {
+                      Succeeded = false,
+                      Errors = new List<string>
+                                { 
+                                    $"Payment is less than the penalty amount. Required: {penalty.Amount:C}" 
+                                } 
+                  };
 
                 // Mark penalty as paid
                 penalty.IsPaid = true;
@@ -164,26 +176,27 @@ namespace Application.BLL
 
                 // Commit the transaction
                 await transaction.CommitAsync();
+
+                return new ApplicationResult { Succeeded = true };
             }
         }
+
+        public async Task<ReadPenaltyDto>  GetPenaltyById(Guid PenaltyId)
+        {
+            var penalty = await _unitOfWork.PenaltyRepository.GetByIdAsync(PenaltyId);
+
+            if (penalty == null)
+                throw new ArgumentException("Penalty Not Found");
+
+            var Dto = new ReadPenaltyDto()
+            {
+                PenaltyId = penalty.PenaltyId,
+                Amount = penalty.Amount,
+                LoanId = penalty.LoanId,
+                MemberName = penalty.Member.FirstName,
+                IsPaid = penalty.IsPaid
+            };
+            return Dto;
+        }
     }
-
-
-    //public Task DeletePenalty(Guid PenaltyId)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-
-    //public Task<bool> IsPenaltyPaid(Guid PenaltyId)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //public Task UpdatePenalty(UpdatePenaltyDto updatePenaltyDto)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-
 }

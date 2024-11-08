@@ -15,7 +15,7 @@ namespace Application.DAL.Repositories
         public override async Task<Penalty> GetByIdAsync(Guid id)
         {
             return await _dbset.Include(P => P.Member)
-                                .Include(P=>P.Loan)
+                               .Include(P=>P.Loan)
                                .FirstOrDefaultAsync(P => P.PenaltyId == id && !P.IsPaid);
         }
 

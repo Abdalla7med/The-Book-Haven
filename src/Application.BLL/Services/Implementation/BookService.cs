@@ -10,6 +10,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Application.BLL
 {
@@ -141,10 +142,15 @@ namespace Application.BLL
             }
 
             List<ReadBookDto> BookDtos= new List<ReadBookDto>();
-            foreach(var q in query)
+            // Materialize the query (execute it and bring data into memory)
+             var books = await query.ToListAsync();  // Executes the query
+            foreach (var q in books)
             {
-                if(!q.IsDeleted)
+                if (!q.IsDeleted)
                 {
+                    Guid authorID = q.AuthorId ?? Guid.NewGuid();
+                    var author = await _unitOfWork.UserRepository.GetByIdAsync(authorID);
+
                     var dto = new ReadBookDto
                     {
                         Id = q.BookId,
@@ -153,10 +159,9 @@ namespace Application.BLL
                         ISBN = q.ISBN,
                         PublicationYear = q.PublicationYear,
                         AvailableCopies = q.AvailableCopies,
-                        AuthorName = q.Author?.FirstName,     // Assuming Author is a navigation property
+                        AuthorName = author.FirstName,     // Assuming Author is a navigation property
                         IsDeleted = q.IsDeleted
                     };
-
 
                     BookDtos.Add(dto);
                 }
@@ -194,11 +199,12 @@ namespace Application.BLL
 
         public async Task<IEnumerable<ReadBookDto>> GetBooksByAuthor(Guid authorId)
         {
-            var books = await _unitOfWork.BookRepository.GetAllAsync();
+            var books = await _unitOfWork.BookRepository.GetAllAsync(); /// eager loading ( nav properties is loaded)
 
             var AuthoredBooks = books.Where(b => b.AuthorId == authorId).ToList();
 
             var AuthoredBooksDtos = new List<ReadBookDto>();
+
             foreach (var book in AuthoredBooks) {
                 var Dto = new ReadBookDto()
                 {
@@ -215,27 +221,43 @@ namespace Application.BLL
         }
         public async Task<PaginatedList<ReadBookDto>> GetAuthoredBooksAsync(Guid authorId, string searchTerm, string category, int pageIndex, int pageSize)
         {
-            var books = _unitOfWork.BookRepository.GetAllAsQueryable();
+            var query = _unitOfWork.BookRepository.GetAllAsQueryable();
 
-            books = books.Where(b => b.AuthorId == authorId);
+            query = query.Where(b => b.AuthorId == authorId);
 
+            var author = await _unitOfWork.UserRepository.GetByIdAsync(authorId);
             // Apply filtering if search term is provided
+
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                books = books.Where(b => b.Title.ToLower().Contains(searchTerm.ToLower()));
+                query = query.Where(b => b.Title.ToLower().Contains(searchTerm.ToLower()));
             }
 
-            var booksDtoQuery = books.Select(book => new ReadBookDto
+            var books = await query.ToListAsync();
+            List<ReadBookDto> BookDtos = new List<ReadBookDto>();
+            foreach (var q in books)
             {
-                Id = book.BookId,
-                Title = book.Title,
-                AuthorName = book.Author.FirstName,
-                AvailableCopies = book.AvailableCopies,
-                CoverUrl = book.CoverUrl
-            });
+                if (!q.IsDeleted)
+                {
+                    var dto = new ReadBookDto
+                    {
+                        Id = q.BookId,
+                        Title = q.Title,
+                        CoverUrl = q.CoverUrl,
+                        ISBN = q.ISBN,
+                        PublicationYear = q.PublicationYear,
+                        AvailableCopies = q.AvailableCopies,
+                        AuthorName = author.FirstName,     // Assuming Author is a navigation property
+                        IsDeleted = q.IsDeleted
+                    };
 
-            // Create a paginated list
-            return await Task.FromResult(PaginatedList<ReadBookDto>.Create(booksDtoQuery, pageIndex, pageSize));
+
+                    BookDtos.Add(dto);
+                }
+            }
+
+            // Paginate the results using PaginatedList
+            return await Task.FromResult(PaginatedList<ReadBookDto>.Create(BookDtos.AsQueryable(), pageIndex, pageSize));
         }
 
         /// <summary>

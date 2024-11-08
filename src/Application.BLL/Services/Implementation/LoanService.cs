@@ -69,15 +69,24 @@ namespace Application.BLL
 
             foreach (var loan in loans)
             {
+                Guid bookId = loan.BookId ?? Guid.NewGuid();
+
+                Guid MemberId = loan.MemberId ?? Guid.NewGuid();
+
+                var Book = await _unitOfWork.BookRepository.GetByIdAsync(bookId);
+
+                var Member = await _unitOfWork.UserRepository.GetByIdAsync(MemberId);
+
                 var Dto = new ReadLoanDto()
                 {
+                    
                     LoanId = loan.LoanId,
                     LoanDate = loan.LoanDate,
                     DueDate = loan.DueDate,
                     ReturnDate = loan.ReturnDate,
                     IsReturned = loan.IsReturned,
-                    BookTitle = loan.Book.Title,
-                    MemberName = loan.Member.FirstName,
+                    BookTitle = Book.Title,
+                    MemberName = Member.FirstName,
                 };
 
                 loanDtos.Add(Dto);
@@ -199,18 +208,18 @@ namespace Application.BLL
             /// there's not a valid place to add return statement 
         }
 
-        public async Task ReturnLoan(Guid loanId)
+        public async Task<ApplicationResult> ReturnLoan(Guid loanId)
         {
             using (var transaction = await _unitOfWork.BeginTransactionAsync())
             {
                 var loan = await _unitOfWork.LoanRepository.GetByIdAsync(loanId);
                 if (loan == null || loan.IsDeleted)
-                    throw new ArgumentException("Loan doesn't exist");
+                    return new ApplicationResult() { Succeeded= false, Errors = new List<string>() { "Loan doesn't exist" } };
+
 
                 if (loan.IsReturned)
-                    throw new InvalidOperationException("Loan has already been returned");
+                    return new ApplicationResult() { Succeeded = false, Errors = new List<string>() { "Loan has already been returned" } };
 
-              
                 if (loan.DueDate < DateTime.UtcNow)
                 {
                     // Calculate penalty
@@ -229,7 +238,11 @@ namespace Application.BLL
                     await _unitOfWork.CompleteAsync();
 
                     // Throw to let middleware handle it if penalty is due
-                    throw new InvalidOperationException($"Please pay the penalty of {penaltyAmount:C} before returning this loan.");
+                    return new ApplicationResult()
+                    {
+                        Succeeded = false,
+                        Errors = new List<string>() { $"Please pay the penalty of {penaltyAmount:C} before returning this loan." }
+                    };
                 }
 
                 // Mark loan as returned
@@ -248,6 +261,10 @@ namespace Application.BLL
 
                 // Commit transaction
                 await transaction.CommitAsync();
+                return new ApplicationResult()
+                {
+                    Succeeded = true
+                };
             }
         }
 
