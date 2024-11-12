@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace Application.DAL
     {
         public Guid PenaltyId { get; set; } = Guid.NewGuid();
         
-        [Precision(3,3), DataType(DataType.Currency)]
+        [Column(TypeName = "decimal(5,2)")]
         public decimal? Amount { get; set; }
         public bool IsPaid { set; get; } = false;
         public bool IsDeleted { set; get; } = false;

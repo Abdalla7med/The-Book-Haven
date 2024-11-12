@@ -13,6 +13,13 @@ namespace Application.DAL.Repositories
 
         public LoanRepository(BookHavenContext _context) : base(_context) { }
 
+        public override async Task<IEnumerable<Loan>> GetAllAsync()
+        {
+            return await _dbset.Include(l => l.Book)
+                                .Include(l => l.Member)
+                                .Include(l => l.Penalty)
+                                .ToListAsync();
+        }
         public override async Task<Loan> GetByIdAsync(Guid id)
         {
             return await _dbset.Include(l => l.Penalty)        // Include Penalty

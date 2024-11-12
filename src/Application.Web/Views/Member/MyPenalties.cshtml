@@ -20,7 +20,16 @@
                     {
                         <tr>
                             <td>@penalty.Amount.ToString()</td>
-                            <td>@(penalty.IsPaid ? "Paid" : "Not Paid")</td>
+                            <td>
+                                @if (penalty.IsPaid)
+                                {
+                                    <span class="text-success">Paid</span>
+                                }
+                                else
+                                {
+                                    <span class="text-danger">Not Paid</span>
+                                }
+                            </td>
                             <td>
                                 <form asp-controller="Penalty" asp-action="Pay" method="post">
                                     <input type="hidden" name="PenaltyID" value="@penalty.PenaltyId"/>

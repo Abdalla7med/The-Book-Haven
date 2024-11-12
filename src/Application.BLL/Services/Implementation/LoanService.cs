@@ -213,6 +213,7 @@ namespace Application.BLL
             using (var transaction = await _unitOfWork.BeginTransactionAsync())
             {
                 var loan = await _unitOfWork.LoanRepository.GetByIdAsync(loanId);
+
                 if (loan == null || loan.IsDeleted)
                     return new ApplicationResult() { Succeeded= false, Errors = new List<string>() { "Loan doesn't exist" } };
 
@@ -220,10 +221,12 @@ namespace Application.BLL
                 if (loan.IsReturned)
                     return new ApplicationResult() { Succeeded = false, Errors = new List<string>() { "Loan has already been returned" } };
 
+                List<string> errors = new List<string>();
+
                 if (loan.DueDate < DateTime.UtcNow)
                 {
                     // Calculate penalty
-                    var penaltyAmount = (decimal)((DateTime.UtcNow - loan.DueDate).TotalDays * 1.5);
+                    var penaltyAmount = new decimal(((DateTime.UtcNow.Day - loan.DueDate.Day) * 1.9));
                     var penalty = new Penalty
                     {
                         Loan = loan,
@@ -235,17 +238,10 @@ namespace Application.BLL
 
                     // Add penalty
                     await _unitOfWork.PenaltyRepository.AddAsync(penalty);
-                    await _unitOfWork.CompleteAsync();
-
-                    // Throw to let middleware handle it if penalty is due
-                    return new ApplicationResult()
-                    {
-                        Succeeded = false,
-                        Errors = new List<string>() { $"Please pay the penalty of {penaltyAmount:C} before returning this loan." }
-                    };
+                    errors.Add($"Pay {penaltyAmount} as a penalty due to you late return");
                 }
 
-                // Mark loan as returned
+               // Mark loan as returned
                 loan.IsReturned = true;
 
                 // Increase available copies
@@ -253,17 +249,18 @@ namespace Application.BLL
                 {
                     loan.Book.AvailableCopies += 1;
                     await _unitOfWork.BookRepository.UpdateAsync(loan.Book);
+
                 }
 
-                // Update loan and save changes
+                // Update e loan and save changes
                 await _unitOfWork.LoanRepository.UpdateAsync(loan);
                 await _unitOfWork.CompleteAsync();
-
                 // Commit transaction
                 await transaction.CommitAsync();
                 return new ApplicationResult()
                 {
-                    Succeeded = true
+                    Succeeded = true,
+                    Errors = errors
                 };
             }
         }

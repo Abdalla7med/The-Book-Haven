@@ -4,6 +4,7 @@ using Application.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Application.DAL.Migrations
 {
     [DbContext(typeof(BookHavenContext))]
-    partial class BookHavenContextModelSnapshot : ModelSnapshot
+    [Migration("20241112162246_updating penalty amount constraints")]
+    partial class updatingpenaltyamountconstraints
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -172,61 +175,61 @@ namespace Application.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            CategoryId = new Guid("4d4cad8b-3132-4361-b9d5-289735b0f24f"),
+                            CategoryId = new Guid("a3454546-6d06-4843-a392-a101af500ed5"),
                             IsDeleted = false,
                             Name = "Fiction"
                         },
                         new
                         {
-                            CategoryId = new Guid("cce5aec2-bd93-4ebb-9d0b-deff18dbf2c6"),
+                            CategoryId = new Guid("179e6695-e784-4ba9-89b7-29079dce496a"),
                             IsDeleted = false,
                             Name = "Non-Fiction"
                         },
                         new
                         {
-                            CategoryId = new Guid("f55162c9-afce-4966-a55d-c56866eb23a1"),
+                            CategoryId = new Guid("d555565d-0787-427e-952e-0458b707c67b"),
                             IsDeleted = false,
                             Name = "Science"
                         },
                         new
                         {
-                            CategoryId = new Guid("b167d21f-89e7-4e03-af45-5dba4480318d"),
+                            CategoryId = new Guid("cdadd978-51e1-4ee8-97e8-996ba8717c0e"),
                             IsDeleted = false,
                             Name = "Technology"
                         },
                         new
                         {
-                            CategoryId = new Guid("5309d513-12d2-4fec-9d13-91fe5b817215"),
+                            CategoryId = new Guid("5742387b-1861-4f92-94de-9f3afdd40cb5"),
                             IsDeleted = false,
                             Name = "History"
                         },
                         new
                         {
-                            CategoryId = new Guid("5b1cb046-981f-45fd-aab3-c868639a0d7b"),
+                            CategoryId = new Guid("838f8c25-f15c-4220-ade0-02d05cf1769c"),
                             IsDeleted = false,
                             Name = "Biography"
                         },
                         new
                         {
-                            CategoryId = new Guid("99183737-d16f-49c0-8c57-98fa08e474fb"),
+                            CategoryId = new Guid("911483bc-53dc-493e-bf64-b26652524e2e"),
                             IsDeleted = false,
                             Name = "Fantasy"
                         },
                         new
                         {
-                            CategoryId = new Guid("eaf144d5-3d84-4b8d-91b8-bfbfc9aa7182"),
+                            CategoryId = new Guid("af49b995-bb7b-43e5-8b97-04d5560c5047"),
                             IsDeleted = false,
                             Name = "Mystery"
                         },
                         new
                         {
-                            CategoryId = new Guid("51d707b3-37b0-431e-b4e2-35cfdfe6d97e"),
+                            CategoryId = new Guid("1abe99c2-576a-43ed-acff-efc7556b0b4f"),
                             IsDeleted = false,
                             Name = "Romance"
                         },
                         new
                         {
-                            CategoryId = new Guid("897e6c49-054d-47d3-815d-d8afa8e11e15"),
+                            CategoryId = new Guid("5365b81e-4084-453b-83f0-bb36693c0c1a"),
                             IsDeleted = false,
                             Name = "Self-Help"
                         });
@@ -275,7 +278,8 @@ namespace Application.DAL.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal?>("Amount")
-                        .HasColumnType("decimal(5,2)");
+                        .HasPrecision(6, 6)
+                        .HasColumnType("decimal(6,6)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");

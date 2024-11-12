@@ -12,6 +12,12 @@ namespace Application.DAL.Repositories
     {
         public PenaltyRepository(BookHavenContext _context) :base(_context) { }
 
+        public override async Task<IEnumerable<Penalty>> GetAllAsync()
+        {
+            return await _dbset.Include(P => P.Member)
+                                .Include(P => P.Loan)
+                                .ToListAsync();
+        }
         public override async Task<Penalty> GetByIdAsync(Guid id)
         {
             return await _dbset.Include(P => P.Member)
@@ -21,7 +27,10 @@ namespace Application.DAL.Repositories
 
         public async Task<IEnumerable<Penalty>> GetPenaltyByMember(Guid MemberId)
         {
-            return await _dbset.Where(P => P.MemberId == MemberId).ToListAsync();
+            return await _dbset.Include(p => p.Member)
+                                .Include(p => p.Loan)
+                                .Where(p => p.MemberId == MemberId)
+                                .ToListAsync();
         }
 
         public async Task<Penalty> GetPenaltyByLoan(Guid LoanId)

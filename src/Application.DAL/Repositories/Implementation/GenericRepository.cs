@@ -31,7 +31,6 @@ namespace Application.DAL.Repositories
         {
             _dbset.Update(entity);
             await SaveAsync();
-
         }
 
 

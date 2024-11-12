@@ -9,9 +9,8 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Penalty ID</th>
                     <th>Amount</th>
-                    <th>Is Paid</th>
+                    <th>Status</th>
                     <th>Member Name</th>
                 </tr>
             </thead>
@@ -20,13 +19,20 @@
                     @foreach (var penalty in Model)
                     {
                         <tr>
-                            <td>@penalty.PenaltyId</td>
                             <td>@penalty.Amount.ToString()</td>
-                            <td>@(penalty.IsPaid ? "Yes" : "No")</td>
+                            <td>
+                                @if (penalty.IsPaid)
+                                {
+                                     <span class="text-success">Paid</span>
+                                }
+                                else
+                                {
+                                   <span class="text-danger">Not Paid</span>
+                                }
+                            </td>
                             <td>@penalty.MemberName</td>
                         </tr>
                     }
-       
             </tbody>
         </table>
     }

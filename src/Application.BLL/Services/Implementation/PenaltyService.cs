@@ -152,23 +152,30 @@ namespace Application.BLL
             {
                 var penalty = await _unitOfWork.PenaltyRepository.GetByIdAsync(penaltyId);
                 if (penalty == null || penalty.IsPaid)
-                   return  new ApplicationResult() { 
-                            Succeeded = false, 
-                            Errors = new List<string>
+                {
+                    await transaction.CommitAsync();
+                    return new ApplicationResult()
+                    {
+                        Succeeded = false,
+                        Errors = new List<string>
                                     {
-                                        "No penalty to pay or penalty is already paid." 
-                                    } 
-                   };
-
+                                        "No penalty to pay or penalty is already paid."
+                                    }
+                    };
+                }
                 if (amount < penalty.Amount)
-                  return new ApplicationResult() {
-                      Succeeded = false,
-                      Errors = new List<string>
-                                { 
-                                    $"Payment is less than the penalty amount. Required: {penalty.Amount:C}" 
-                                } 
-                  };
+                {
+                    await transaction.CommitAsync();
+                    return new ApplicationResult()
+                    {
+                        Succeeded = false,
+                        Errors = new List<string>
+                                {
+                                    $"Payment is less than the penalty amount. Required: {penalty.Amount:C}"
+                                }
+                    };
 
+                }
                 // Mark penalty as paid
                 penalty.IsPaid = true;
                 await _unitOfWork.PenaltyRepository.UpdateAsync(penalty);

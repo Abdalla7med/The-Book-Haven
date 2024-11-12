@@ -2,9 +2,9 @@
 
 
 @{
-
+     Layout = "~/Views/Shared/_MemberLayout.cshtml";
     ViewData["Title"] = $"{ViewBag.UserName} Loans";
-    Layout = "~/Views/Shared/_MemberLayout.cshtml";
+
 }
 
 @if (Model != null && Model.Any())
@@ -39,7 +39,7 @@
                     <td>
                         <form asp-controller="Loan" asp-action="ReturnLoan" method="post" style="display:inline;">
                             <input type="hidden" name="LoanId" value="@loan.LoanId" />
-                            <button type="submit" class="btn btn-Success">Return</button>
+                            <button type="submit" class="btn btn-Primary">Return</button>
                         </form>
                     </td>
                 </tr>
